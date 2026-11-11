@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ónix Próspera - CRM Soluções Financeiras</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lightBg: '#F8FAFC',
+                        cardBg: '#FFFFFF',
+                        brandGreen: '#064E3B',
+                        brandGreenHover: '#022C22',
+                        brandGold: '#D97706',
+                        brandGoldLight: '#FEF3C7',
+                        borderLight: '#E2E8F0',
+                        textDark: '#1E293B',
+                        textMuted: '#64748B'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #064E3B; }
+    </style>
+</head>
+<body class="bg-lightBg text-textDark min-h-screen flex flex-col antialiased selection:bg-brandGold selection:text-white">
+
+    <!-- TELA DE LOGIN / SELEÇÃO DE PERFIL -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-brandGreen/90 backdrop-blur-sm p-4">
+        <div class="bg-cardBg border border-borderLight rounded-3xl w-full max-w-md p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl bg-brandGreen/10 text-brandGreen flex items-center justify-center mx-auto text-2xl font-bold border border-brandGreen/20">
+                    <i class="fa-solid fa-shield-halved text-brandGold"></i>
+                </div>
+                <h1 class="font-extrabold text-xl text-textDark tracking-wider">ÓNIX PRÓSPERA</h1>
+                <p class="text-xs text-textMuted tracking-widest uppercase font-semibold">Soluções Financeiras Ltda.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Selecione o seu Perfil de Acesso</label>
+                    <select id="login-profile-select" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGreen">
+                        <option value="dono">👑 Dono (Acesso Total / Financeiro)</option>
+                        <option value="admin">⚙️ Administrador (Gestão de Sistema / Usuários)</option>
+                        <option value="juridico">⚖️ Jurídico (Processos, Simulador e Contratos)</option>
+                        <option value="comercial">💼 Comercial (Meus Leads e Vendas)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Usuário / E-mail</label>
+                    <input type="text" id="login-user" value="luiz.paulo@onix.com" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGreen">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Senha</label>
+                    <input type="password" id="login-pass" value="123456" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGreen">
+                </div>
+
+                <button onclick="handleLogin()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-brandGreen/20 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket text-brandGold"></i> Entrar no Sistema CRM
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL (Oculta até efetuar login) -->
+    <div id="main-app" class="hidden flex-1 flex flex-col md:flex-row h-screen overflow-hidden">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="w-full md:w-64 bg-cardBg border-r border-borderLight flex flex-col justify-between shrink-0 shadow-sm">
+            <div>
+                <!-- Logo Header -->
+                <div class="p-6 border-b border-borderLight flex items-center justify-between">
+                    <div>
+                        <h1 class="font-bold text-brandGreen tracking-wider text-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-brandGold"></i> ÓNIX PRÓSPERA
+                        </h1>
+                        <p class="text-[10px] text-textMuted tracking-widest font-semibold mt-0.5">SOLUÇÕES FINANCEIRAS</p>
+                    </div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-brandGold animate-pulse"></div>
+                </div>
+
+                <!-- User Info -->
+                <div class="p-3 mx-4 my-3 bg-lightBg rounded-xl border border-borderLight flex items-center justify-between">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-10 h-10 rounded-full bg-brandGreen/10 text-brandGreen flex items-center justify-center font-bold text-xs shrink-0">
+                            LP
+                        </div>
+                        <div class="overflow-hidden">
+                            <p id="profile-badge-text" class="text-[10px] text-brandGold uppercase font-bold">Consultor</p>
+                            <p class="text-xs font-bold truncate text-textDark">Luiz Paulo Corrêa</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" title="Sair do Sistema" class="text-textMuted hover:text-red-600 p-1 text-xs transition">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+
+                <!-- Menu Links -->
+                <nav class="px-4 py-2 space-y-1">
+                    <p class="px-3 text-[10px] tracking-wider text-textMuted uppercase font-semibold mb-2">Geral</p>
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-brandGreen bg-brandGreen/10 border border-brandGreen/20">
+                        <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('leads')" id="nav-leads" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-users w-5 text-center"></i> Meus Leads
+                    </button>
+                    <button onclick="switchTab('negotiating')" id="nav-negotiating" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-handshake w-5 text-center"></i> Negociando
+                    </button>
+                    <button onclick="switchTab('juridico')" id="nav-juridico" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Jurídico
+                    </button>
+                    <button onclick="switchTab('sales')" id="nav-sales" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Minhas Vendas
+                    </button>
+
+                    <p class="px-3 pt-4 text-[10px] tracking-wider text-textMuted uppercase font-semibold mb-2">Ferramentas</p>
+                    <button onclick="switchTab('bulk-import')" id="nav-bulk-import" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-file-import w-5 text-center"></i> Importar Lote
+                    </button>
+                    <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-calculator w-5 text-center"></i> Simulador
+                    </button>
+                    <button onclick="switchTab('ranking')" id="nav-ranking" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-trophy w-5 text-center"></i> Ranking
+                    </button>
+                    <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn hidden w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
+                        <i class="fa-solid fa-user-gear w-5 text-center"></i> Painel Admin
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="p-4 border-t border-borderLight">
+                <button onclick="resetDataPrompt()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs text-red-600 hover:bg-red-50 transition font-medium">
+                    <i class="fa-solid fa-rotate-right"></i> Restaurar Dados
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+            
+            <!-- TOP HEADER BAR -->
+            <header class="bg-cardBg border-b border-borderLight px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <h2 id="current-tab-title" class="text-lg font-bold text-textDark tracking-wide">Dashboard</h2>
+                    <span class="text-xs bg-brandGold/10 text-brandGold border border-brandGold/30 px-2.5 py-1 rounded-full font-semibold">Outubro de 2026</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="switchTab('bulk-import')" class="bg-brandGold/10 hover:bg-brandGold/20 text-brandGold border border-brandGold/30 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-import"></i> Importar Lista
+                    </button>
+                    <button onclick="openNewLeadModal()" class="bg-brandGreen hover:bg-brandGreenHover text-white font-semibold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-md shadow-brandGreen/10">
+                        <i class="fa-solid fa-plus"></i> Novo Lead
+                    </button>
+                </div>
+            </header>
+
+            <!-- VIEW 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content p-6 space-y-6">
+                <!-- Meta Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
+                                <span>Meta Mensal</span>
+                                <i class="fa-solid fa-bullseye text-brandGold"></i>
+                            </div>
+                            <h3 id="dash-meta" class="text-2xl font-bold text-textDark">R$ 10.000,00</h3>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-textMuted mb-1 font-medium">
+                                <span>Progresso</span>
+                                <span id="dash-meta-percent">2%</span>
+                            </div>
+                            <div class="w-full bg-lightBg h-2 rounded-full overflow-hidden border border-borderLight">
+                                <div id="dash-meta-bar" class="bg-brandGold h-full transition-all duration-500 rounded-full" style="width: 2%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span>Total Recebido</span>
+                            <i class="fa-solid fa-wallet text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <h3 id="dash-recebido" class="text-2xl font-bold text-emerald-600">R$ 200,00</h3>
+                            <p class="text-xs text-textMuted mt-1">Acumulado no mês</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span>Restante da Meta</span>
+                            <i class="fa-solid fa-chart-line text-brandGold"></i>
+                        </div>
+                        <div>
+                            <h3 id="dash-restante" class="text-2xl font-bold text-brandGold">R$ 9.800,00</h3>
+                            <p class="text-xs text-textMuted mt-1">Falta para bater meta</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span>Nº de Vendas</span>
+                            <i class="fa-solid fa-bag-shopping text-brandGreen"></i>
+                        </div>
+                        <div>
+                            <h3 id="dash-num-vendas" class="text-2xl font-bold text-textDark">0</h3>
+                            <p class="text-xs text-textMuted mt-1">Contratos fechados</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row: Counters & Automatic Alerts -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm col-span-2">
+                        <h3 class="text-xs font-bold text-textDark uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-brandGreen"></i> Resumo de Leads por Status
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-textMuted font-medium">Total Leads</span>
+                                <h4 id="count-total" class="text-xl font-bold text-textDark mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-blue-600 font-medium">Novos</span>
+                                <h4 id="count-novos" class="text-xl font-bold text-blue-600 mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-amber-600 font-medium">Em Contato</span>
+                                <h4 id="count-contato" class="text-xl font-bold text-amber-600 mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-purple-600 font-medium">Negociando</span>
+                                <h4 id="count-negociando" class="text-xl font-bold text-purple-600 mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-indigo-600 font-medium">Jurídico ⚖️</span>
+                                <h4 id="count-juridico" class="text-xl font-bold text-indigo-600 mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <span class="text-[11px] text-emerald-600 font-medium">Convertidos</span>
+                                <h4 id="count-convertidos" class="text-xl font-bold text-emerald-600 mt-1">0</h4>
+                            </div>
+                            <div class="bg-lightBg p-4 rounded-xl border border-borderLight col-span-2 sm:col-span-2">
+                                <span class="text-[11px] text-red-600 font-medium">Perdidos</span>
+                                <h4 id="count-perdidos" class="text-xl font-bold text-red-600 mt-1">0</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xs font-bold text-textDark uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Alertas Automáticos
+                                </h3>
+                                <span id="alert-count-badge" class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded-full font-bold">0</span>
+                            </div>
+                            <p class="text-xs text-textMuted mb-3">Leads parados há mais de 3 dias sem alteração:</p>
+                            
+                            <div id="alerts-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-borderLight text-[11px] text-textMuted flex items-center gap-1.5 font-medium">
+                            <i class="fa-solid fa-clock-rotate-left text-brandGold"></i> Monitoramento automático ativo
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: MEUS LEADS -->
+            <section id="tab-leads" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <button onclick="filterLeads('todos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brandGreen text-white transition shadow-sm">Todos</button>
+                        <button onclick="filterLeads('Novos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Novos</button>
+                        <button onclick="filterLeads('Em Contato')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Em Contato</button>
+                        <button onclick="filterLeads('Negociando')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Negociando</button>
+                        <button onclick="filterLeads('Jurídico')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Jurídico</button>
+                        <button onclick="filterLeads('Convertido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Convertido</button>
+                        <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Perdidos</button>
+                    </div>
+                    <div class="relative w-full sm:w-64">
+                        <input type="text" id="lead-search-input" oninput="renderLeads()" placeholder="Buscar por nome, CPF..." class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark placeholder-textMuted focus:outline-none focus:border-brandGreen">
+                        <i class="fa-solid fa-search absolute right-3.5 top-3 text-textMuted text-xs"></i>
+                    </div>
+                </div>
+
+                <div id="leads-list-container" class="space-y-3"></div>
+            </section>
+
+            <!-- VIEW 3: NEGOCIANDO -->
+            <section id="tab-negotiating" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-sm text-textDark mb-1"><i class="fa-solid fa-handshake text-brandGold mr-2"></i> Pipeline de Negociação</h3>
+                    <p class="text-xs text-textMuted">Leads avançados no funil prontos para fechamento ou transferência para o Jurídico.</p>
+                </div>
+                <div id="negotiating-list-container" class="space-y-3"></div>
+            </section>
+
+            <!-- VIEW NOVA: JURÍDICO -->
+            <section id="tab-juridico" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-sm text-textDark mb-1"><i class="fa-solid fa-scale-balanced text-indigo-600 mr-2"></i> Setor Jurídico</h3>
+                    <p class="text-xs text-textMuted">Leads que concluíram a negociação comercial e estão em análise processual jurídica.</p>
+                </div>
+                <div id="juridico-list-container" class="space-y-3"></div>
+            </section>
+
+            <!-- VIEW NOVA: IMPORTAR EM LOTE -->
+            <section id="tab-bulk-import" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-6 rounded-2xl shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-sm text-textDark flex items-center gap-2">
+                            <i class="fa-solid fa-file-import text-brandGold"></i> Importador Inteligente de Leads em Lote
+                        </h3>
+                        <span class="text-xs bg-brandGreen/10 text-brandGreen font-semibold px-2.5 py-1 rounded-full">Automático</span>
+                    </div>
+
+                    <p class="text-xs text-textMuted">
+                        Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente.
+                    </p>
+
+                    <textarea id="bulk-import-textarea" oninput="processBulkText()" placeholder="Cole sua lista aqui, por exemplo:&#10;&#10;MARIA LUCINDA NASCIMENTO SILVA&#10;4006679-23.2026.8.26.0038&#10;(65) 99921-2621&#10;&#10;ANA CARLA DA SILVA SANTOS&#10;4037309-28.2026.8.26.0405&#10;(11) 97434-3825&#10;(11) 98329-5101" class="w-full h-48 bg-lightBg border border-borderLight rounded-xl p-4 text-xs font-mono text-textDark focus:outline-none focus:border-brandGreen resize-none"></textarea>
+
+                    <!-- Preview area -->
+                    <div class="border-t border-borderLight pt-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-bold text-textDark uppercase tracking-wider">Leads Reconhecidos (<span id="bulk-count">0</span>)</h4>
+                            <button id="btn-import-all" onclick="confirmBulkImport()" disabled class="bg-brandGreen hover:bg-brandGreenHover disabled:bg-gray-300 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-2">
+                                <i class="fa-solid fa-check"></i> Importar Todos para "Novos Leads"
+                            </button>
+                        </div>
+                        <div id="bulk-preview-container" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                            <p class="text-xs text-textMuted italic">Nenhum lead detectado ainda. Cole a lista no campo acima.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: MINHAS VENDAS -->
+            <section id="tab-sales" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-sm text-textDark">Contratos e Vendas Fechadas</h3>
+                        <p class="text-xs text-textMuted">Acompanhamento financeiro de parcelas, entradas e comprovantes.</p>
+                    </div>
+                    <button onclick="switchTab('simulator')" class="bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-calculator"></i> Nova Proposta / Simulador
+                    </button>
+                </div>
+
+                <div class="bg-cardBg border border-borderLight rounded-2xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-lightBg text-textMuted border-b border-borderLight uppercase tracking-wider font-semibold">
+                                <tr>
+                                    <th class="p-3.5">Data</th>
+                                    <th class="p-3.5">Cliente</th>
+                                    <th class="p-3.5">Processo</th>
+                                    <th class="p-3.5">Serviço</th>
+                                    <th class="p-3.5">Valor Total</th>
+                                    <th class="p-3.5">Recebido</th>
+                                    <th class="p-3.5">Status</th>
+                                    <th class="p-3.5 text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-table-body" class="divide-y divide-borderLight"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 5: SIMULADOR -->
+            <section id="tab-simulator" class="tab-content hidden p-6 space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-brandGreen flex items-center gap-2 border-b border-borderLight pb-3">
+                            <i class="fa-solid fa-calculator text-brandGold"></i> Simulador & Proposta de Negociação
+                        </h3>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-textMuted mb-1">Nome do Cliente</label>
+                                <input type="text" id="sim-client-name" placeholder="Ex: Carlos Eduardo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-textMuted mb-1">CPF / Identificação</label>
+                                    <input type="text" id="sim-client-cpf" placeholder="000.000.000-00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-textMuted mb-1">Banco / Órgão</label>
+                                    <input type="text" id="sim-bank" placeholder="Ex: Banco Itaú" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                </div>
+                            </div>
+
+                            <div class="border-t border-borderLight pt-3">
+                                <label class="block text-xs font-medium text-brandGreen mb-2">Dados de Financiamento</label>
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <label class="block text-[11px] text-textMuted mb-1">Valor Atual da Parcela (R$)</label>
+                                        <input type="number" id="sim-parcel-value" oninput="calculateSimulation()" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-textMuted mb-1">Qtd de Parcelas Restantes</label>
+                                        <input type="number" id="sim-parcels-total" oninput="calculateSimulation()" placeholder="0" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs text-textMuted mb-1">
+                                        <span>Desconto Aplicado</span>
+                                        <span id="sim-discount-val" class="font-bold text-brandGold">0%</span>
+                                    </div>
+                                    <input type="range" id="sim-discount-range" min="0" max="60" value="0" oninput="calculateSimulation()" class="w-full accent-brandGold cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-textDark mb-4 border-b border-borderLight pb-3 flex items-center justify-between">
+                                <span>Resultado da Simulação</span>
+                                <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">Pronto para Envio</span>
+                            </h3>
+
+                            <div class="space-y-4 bg-lightBg p-4 rounded-xl border border-borderLight">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-textMuted">Valor Total Original:</span>
+                                    <span id="res-original" class="font-bold text-textDark text-sm">R$ 0,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-textMuted">Desconto Aplicado:</span>
+                                    <span id="res-discount" class="font-bold text-brandGold">R$ 0,00 (0%)</span>
+                                </div>
+                                <div class="border-t border-borderLight pt-3 flex justify-between items-center">
+                                    <span class="text-sm font-semibold text-textDark">Novo Valor da Dívida:</span>
+                                    <span id="res-final" class="text-xl font-extrabold text-emerald-600">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mt-6">
+                            <button onclick="copyProposalText()" class="w-full bg-lightBg hover:bg-gray-50 border border-borderLight text-brandGold text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-copy"></i> Copiar Proposta para WhatsApp
+                            </button>
+                            <button onclick="saveSimulationAsSale()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-brandGreen/10">
+                                <i class="fa-solid fa-check-circle text-brandGold"></i> Efetivar Negócio / Gerar Venda
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 6: RANKING -->
+            <section id="tab-ranking" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-6 rounded-2xl shadow-sm text-center max-w-md mx-auto space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-brandGold/10 text-brandGold flex items-center justify-center mx-auto text-2xl font-bold">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-textDark">Ranking de Vendedores</h3>
+                    <p class="text-xs text-textMuted">Você está atualmente na <strong class="text-brandGreen">1ª posição</strong> da equipe Ónix Próspera neste mês.</p>
+                </div>
+            </section>
+
+            <!-- VIEW 7: PAINEL ADMIN -->
+            <section id="tab-admin" class="tab-content hidden p-6 space-y-6">
+                <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="font-bold text-sm text-textDark"><i class="fa-solid fa-user-gear text-brandGold mr-2"></i> Painel de Administração & Acessos</h3>
+                    <p class="text-xs text-textMuted">Gerenciamento de contas e permissões do sistema Ónix Próspera.</p>
+                    <div class="bg-lightBg p-4 rounded-xl border border-borderLight text-xs space-y-2">
+                        <p class="font-semibold text-textDark">Perfis Ativos no Sistema:</p>
+                        <ul class="list-disc list-inside text-textMuted space-y-1">
+                            <li><strong>Dono:</strong> Acesso total a painéis e faturamento.</li>
+                            <li><strong>Administrador:</strong> Gestão de acessos e configurações.</li>
+                            <li><strong>Jurídico:</strong> Processos, simulações e parcelamentos.</li>
+                            <li><strong>Comercial:</strong> Leads individuais e atendimento.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: NEW / EDIT LEAD -->
+    <div id="lead-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-cardBg border border-borderLight rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="p-5 border-b border-borderLight flex justify-between items-center">
+                <h3 id="modal-lead-title" class="font-bold text-sm text-textDark">Novo Lead / Contato</h3>
+                <button onclick="closeLeadModal()" class="text-textMuted hover:text-textDark text-xs"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <input type="hidden" id="modal-lead-id">
+                <div>
+                    <label class="block text-xs font-medium text-textMuted mb-1">Nome do Cliente</label>
+                    <input type="text" id="modal-name" placeholder="Nome completo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-textMuted mb-1">WhatsApp / Telefone</label>
+                        <input type="text" id="modal-phone" placeholder="(11) 99999-9999" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-textMuted mb-1">Nº Processo / CPF</label>
+                        <input type="text" id="modal-process" placeholder="Nº do processo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-textMuted mb-1">Status Inicial</label>
+                        <select id="modal-status" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                            <option value="Novos">Novos</option>
+                            <option value="Em Contato">Em Contato</option>
+                            <option value="Negociando">Negociando</option>
+                            <option value="Jurídico">Jurídico</option>
+                            <option value="Convertido">Convertido</option>
+                            <option value="Perdido">Perdido</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-textMuted mb-1">Data Última Interação</label>
+                        <input type="date" id="modal-last-contact" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-borderLight bg-lightBg flex justify-end gap-2">
+                <button onclick="closeLeadModal()" class="px-4 py-2 rounded-xl text-xs text-textMuted hover:text-textDark transition font-medium">Cancelar</button>
+                <button onclick="saveLeadFromModal()" class="bg-brandGreen hover:bg-brandGreenHover text-white font-semibold px-4 py-2 rounded-xl text-xs transition shadow-sm">Salvar Lead</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-cardBg border border-brandGold/50 text-textDark px-4 py-3 rounded-2xl shadow-2xl hidden z-50 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-brandGold text-base"></i>
+        <span id="toast-message" class="text-xs font-semibold">Ação realizada com sucesso!</span>
+    </div>
+
+    <!-- SCRIPT DE CONTROLE -->
+    <script>
+        const STORAGE_KEY = "onix_prospera_master_crm_v1";
+
+        let defaultData = {
+            currentUserRole: 'dono',
+            leads: [
+                { id: 1, name: "Thiago Gualberto Caju", phone: "(19) 99907-0501", process: "4020058-79.2026.8.26.0477", status: "Em Contato", lastContact: "2026-10-10", notes: "Aguardando resposta sobre simulação" },
+                { id: 2, name: "Elaine de Barros Martiniano", phone: "(19) 98985-0480", process: "4020352-04.2026.8.26.0477", status: "Negociando", lastContact: "2026-10-12", notes: "Interessada no desconto de 15%" },
+                { id: 3, name: "Gabriel Meitestainer Picaglie", phone: "(19) 99907-6774", process: "400149-11.2026.8.26.0435", status: "Novos", lastContact: "2026-10-14", notes: "Lead recém chegado do site" },
+                { id: 4, name: "João Francisco da Silva", phone: "(19) 98986-6006", process: "4037896-18.2026.8.26.0001", status: "Novos", lastContact: "2026-10-01", notes: "Sem resposta" }
+            ],
+            sales: [
+                { id: 1, date: "2026-10-08", client: "Thiago Lima Siqueira", process: "4020058-79.2026.8.26.077", service: "Revisional de Financiamento", totalVal: 300.00, receivedVal: 300.00, status: "Aprovado", parcels: [] }
+            ],
+            metaMonthly: 10000.00
+        };
+
+        let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+        let parsedBulkLeads = [];
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        function resetDataPrompt() {
+            if (confirm("Deseja restaurar os dados iniciais?")) {
+                appData = JSON.parse(JSON.stringify(defaultData));
+                saveToStorage();
+                initApp();
+                showToast("Dados restaurados!");
+            }
+        }
+
+        function handleLogin() {
+            const role = document.getElementById('login-profile-select').value;
+            appData.currentUserRole = role;
+            saveToStorage();
+
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+
+            const roleNames = {
+                dono: '👑 Dono (Acesso Total)',
+                admin: '⚙️ Administrador',
+                juridico: '⚖️ Jurídico',
+                comercial: '💼 Comercial'
+            };
+
+            document.getElementById('profile-badge-text').innerText = roleNames[role];
+            
+            // Controle de visibilidade do painel admin
+            if (role === 'dono' || role === 'admin') {
+                document.getElementById('nav-admin').classList.remove('hidden');
+            } else {
+                document.getElementById('nav-admin').classList.add('hidden');
+            }
+
+            // Filtragem de menus por perfil
+            if (role === 'comercial') {
+                document.getElementById('nav-juridico').classList.add('hidden');
+            } else {
+                document.getElementById('nav-juridico').classList.remove('hidden');
+            }
+
+            switchTab('dashboard');
+        }
+
+        function logout() {
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-brandGreen', 'bg-brandGreen/10', 'border', 'border-brandGreen/20');
+                btn.classList.add('text-textMuted');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.add('text-brandGreen', 'bg-brandGreen/10', 'border', 'border-brandGreen/20');
+                activeBtn.classList.remove('text-textMuted');
+            }
+
+            const titles = {
+                dashboard: 'Dashboard',
+                leads: 'Meus Leads',
+                negotiating: 'Negociando',
+                juridico: 'Setor Jurídico',
+                'bulk-import': 'Importação em Lote',
+                sales: 'Minhas Vendas',
+                simulator: 'Simulador de Propostas',
+                ranking: 'Ranking',
+                admin: 'Painel de Administração'
+            };
+            document.getElementById('current-tab-title').innerText = titles[tabId] || 'CRM';
+
+            if(tabId === 'dashboard') updateDashboard();
+            if(tabId === 'leads') renderLeads('todos');
+            if(tabId === 'negotiating') renderNegotiating();
+            if(tabId === 'juridico') renderJuridico();
+            if(tabId === 'sales') renderSalesTable();
+        }
+
+        function checkInactivityAlerts() {
+            const today = new Date();
+            let alerts = [];
+            appData.leads.forEach(lead => {
+                if (lead.status === 'Em Contato' || lead.status === 'Negociando') {
+                    const lastDate = new Date(lead.lastContact);
+                    const diffDays = Math.ceil(Math.abs(today - lastDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays >= 3) alerts.push({ ...lead, daysInactive: diffDays });
+                }
+            });
+            return alerts;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function updateDashboard() {
+            // Regra do Perfil Comercial: O Comercial não enxerga leads que foram pro Jurídico
+            let leadsVisiveis = appData.leads;
+            if (appData.currentUserRole === 'comercial') {
+                leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
+            }
+
+            document.getElementById('count-total').innerText = leadsVisiveis.length;
+            document.getElementById('count-novos').innerText = leadsVisiveis.filter(l => l.status === 'Novos').length;
+            document.getElementById('count-contato').innerText = leadsVisiveis.filter(l => l.status === 'Em Contato').length;
+            document.getElementById('count-negociando').innerText = leadsVisiveis.filter(l => l.status === 'Negociando').length;
+            document.getElementById('count-juridico').innerText = leadsVisiveis.filter(l => l.status === 'Jurídico').length;
+            document.getElementById('count-convertidos').innerText = leadsVisiveis.filter(l => l.status === 'Convertido').length;
+            document.getElementById('count-perdidos').innerText = leadsVisiveis.filter(l => l.status === 'Perdido').length;
+
+            let totalReceived = appData.sales.reduce((acc, sale) => acc + sale.receivedVal, 0);
+            let restante = Math.max(0, appData.metaMonthly - totalReceived);
+            let percent = Math.min(100, Math.round((totalReceived / appData.metaMonthly) * 100));
+
+            document.getElementById('dash-meta').innerText = `R$ ${appData.metaMonthly.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-recebido').innerText = `R$ ${totalReceived.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-restante').innerText = `R$ ${restante.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-num-vendas').innerText = appData.sales.length;
+            document.getElementById('dash-meta-percent').innerText = `${percent}%`;
+            document.getElementById('dash-meta-bar').style.width = `${percent}%`;
+
+            const alerts = checkInactivityAlerts();
+            document.getElementById('alert-count-badge').innerText = alerts.length;
+            const container = document.getElementById('alerts-container');
+            container.innerHTML = alerts.length === 0 ? `<p class="text-xs text-textMuted italic py-2">Nenhum alerta pendente.</p>` : '';
+            alerts.forEach(alert => {
+                container.innerHTML += `
+                    <div class="bg-lightBg p-2.5 rounded-xl border border-amber-200 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-textDark block">${alert.name}</span>
+                            <span class="text-[10px] text-amber-700 font-medium">Inativo há ${alert.daysInactive} dias</span>
+                        </div>
+                        <button onclick="openWhatsApp('${alert.phone}', '${alert.name}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold">Chamar</button>
+                    </div>
+                `;
+            });
+        }
+
+        let currentFilter = 'todos';
+        function filterLeads(status) {
+            currentFilter = status;
+            renderLeads();
+        }
+
+        function renderLeads() {
+            const container = document.getElementById('leads-list-container');
+            const search = document.getElementById('lead-search-input').value.toLowerCase();
+            container.innerHTML = '';
+
+            let leadsVisiveis = appData.leads;
+            if (appData.currentUserRole === 'comercial') {
+                leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
+            }
+
+            let filtered = leadsVisiveis.filter(lead => {
+                const matchStatus = currentFilter === 'todos' || lead.status === currentFilter;
+                const matchSearch = lead.name.toLowerCase().includes(search) || lead.phone.includes(search) || lead.process.includes(search);
+                return matchStatus && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum lead encontrado.</p>`;
+                return;
+            }
+
+            filtered.forEach(lead => {
+                container.innerHTML += `
+                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
+                            <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                            </button>
+                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGreen">
+                                <option value="Novos" ${lead.status==='Novos'?'selected':''}>Novos</option>
+                                <option value="Em Contato" ${lead.status==='Em Contato'?'selected':''}>Em Contato</option>
+                                <option value="Negociando" ${lead.status==='Negociando'?'selected':''}>Negociando</option>
+                                <option value="Jurídico" ${lead.status==='Jurídico'?'selected':''}>⚖️ Jurídico</option>
+                                <option value="Convertido" ${lead.status==='Convertido'?'selected':''}>Convertido</option>
+                                <option value="Perdido" ${lead.status==='Perdido'?'selected':''}>Perdido</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderNegotiating() {
+            const container = document.getElementById('negotiating-list-container');
+            container.innerHTML = '';
+            const negs = appData.leads.filter(l => l.status === 'Negociando');
+            if (negs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum lead na fase de negociação.</p>`;
+                return;
+            }
+            negs.forEach(lead => {
+                container.innerHTML += `
+                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
+                            <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="updateLeadStatus(${lead.id}, 'Jurídico')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Passar para Jurídico ⚖️</button>
+                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderJuridico() {
+            const container = document.getElementById('juridico-list-container');
+            container.innerHTML = '';
+            const jur = appData.leads.filter(l => l.status === 'Jurídico');
+            if (jur.length === 0) {
+                container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum processo atualmente sob análise do Jurídico.</p>`;
+                return;
+            }
+            jur.forEach(lead => {
+                container.innerHTML += `
+                    <div class="bg-cardBg border border-indigo-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold text-indigo-600 uppercase">Em Análise Processual</span>
+                            <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
+                            <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="updateLeadStatus(${lead.id}, 'Convertido')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Finalizar / Fechar Venda</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        /* LÓGICA DO IMPORTADOR EM LOTE */
+        function processBulkText() {
+            const rawText = document.getElementById('bulk-import-textarea').value;
+            const previewContainer = document.getElementById('bulk-preview-container');
+            const countSpan = document.getElementById('bulk-count');
+            const btnImport = document.getElementById('btn-import-all');
+
+            if (!rawText.trim()) {
+                parsedBulkLeads = [];
+                previewContainer.innerHTML = `<p class="text-xs text-textMuted italic">Nenhum lead detectado ainda. Cole a lista no campo acima.</p>`;
+                countSpan.innerText = "0";
+                btnImport.disabled = true;
+                return;
+            }
+
+            const blocks = rawText.split(/\n\s*\n+/);
+            parsedBulkLeads = [];
+
+            blocks.forEach(block => {
+                const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+                if (lines.length === 0) return;
+
+                let name = '';
+                let processNumber = '';
+                const phones = [];
+
+                lines.forEach(line => {
+                    const procMatch = line.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/);
+                    const phoneMatch = line.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/g);
+
+                    if (procMatch) {
+                        processNumber = procMatch[0];
+                    } else if (phoneMatch) {
+                        phones.push(...phoneMatch);
+                    } else if (!name) {
+                        name = line;
+                    }
+                });
+
+                if (name) {
+                    parsedBulkLeads.push({
+                        id: Date.now() + Math.random(),
+                        name: name,
+                        phone: phones.length > 0 ? phones.join(' / ') : 'Sem telefone',
+                        process: processNumber || 'N/A',
+                        status: 'Novos',
+                        lastContact: new Date().toISOString().split('T')[0],
+                        notes: 'Importado em Lote'
+                    });
+                }
+            });
+
+            countSpan.innerText = parsedBulkLeads.length;
+            btnImport.disabled = parsedBulkLeads.length === 0;
+
+            previewContainer.innerHTML = '';
+            parsedBulkLeads.forEach(item => {
+                previewContainer.innerHTML += `
+                    <div class="bg-lightBg p-3 rounded-xl border border-borderLight flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-textDark block">${item.name}</span>
+                            <span class="text-textMuted text-[11px]">Proc: ${item.process} | Tel: ${item.phone}</span>
+                        </div>
+                        <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full">Novo</span>
+                    </div>
+                `;
+            });
+        }
+
+        function confirmBulkImport() {
+            if (parsedBulkLeads.length === 0) return;
+            appData.leads.unshift(...parsedBulkLeads);
+            saveToStorage();
+            showToast(`${parsedBulkLeads.length} leads importados com sucesso!`);
+            document.getElementById('bulk-import-textarea').value = '';
+            processBulkText();
+            updateDashboard();
+            switchTab('leads');
+        }
+
+        function updateLeadStatus(id, newStatus) {
+            const lead = appData.leads.find(l => l.id === id);
+            if(lead) {
+                lead.status = newStatus;
+                lead.lastContact = new Date().toISOString().split('T')[0];
+                saveToStorage();
+                showToast(`Status atualizado para ${newStatus}`);
+                updateDashboard();
+                renderLeads();
+            }
+        }
+
+        function openWhatsApp(phone, name) {
+            window.open(`https://wa.me/55${phone.replace(/\D/g, '')}?text=${encodeURIComponent('Olá ' + name + ', retomando contato.')}`, '_blank');
+        }
+
+        function openNewLeadModal() {
+            document.getElementById('modal-lead-title').innerText = "Novo Lead";
+            document.getElementById('modal-lead-id').value = "";
+            document.getElementById('modal-name').value = "";
+            document.getElementById('modal-phone').value = "";
+            document.getElementById('modal-process').value = "";
+            document.getElementById('modal-status').value = "Novos";
+            document.getElementById('modal-last-contact').value = new Date().toISOString().split('T')[0];
+            document.getElementById('lead-modal').classList.remove('hidden');
+            document.getElementById('lead-modal').classList.add('flex');
+        }
+
+        function closeLeadModal() {
+            document.getElementById('lead-modal').classList.remove('flex');
+            document.getElementById('lead-modal').classList.add('hidden');
+        }
+
+        function saveLeadFromModal() {
+            const name = document.getElementById('modal-name').value;
+            const phone = document.getElementById('modal-phone').value;
+            if(!name || !phone) { alert('Preencha nome e telefone.'); return; }
+            
+            appData.leads.push({
+                id: Date.now(),
+                name, phone,
+                process: document.getElementById('modal-process').value || 'N/A',
+                status: document.getElementById('modal-status').value,
+                lastContact: document.getElementById('modal-last-contact').value,
+                notes: ''
+            });
+            saveToStorage();
+            closeLeadModal();
+            renderLeads();
+            updateDashboard();
+            showToast("Lead cadastrado com sucesso!");
+        }
+
+        function calculateSimulation() {
+            const val = parseFloat(document.getElementById('sim-parcel-value').value) || 0;
+            const count = parseInt(document.getElementById('sim-parcels-total').value) || 0;
+            const disc = parseInt(document.getElementById('sim-discount-range').value) || 0;
+            document.getElementById('sim-discount-val').innerText = `${disc}%`;
+            const orig = val * count;
+            const final = orig - ((orig * disc) / 100);
+            document.getElementById('res-original').innerText = `R$ ${orig.toFixed(2)}`;
+            document.getElementById('res-discount').innerText = `R$ ${(orig - final).toFixed(2)} (${disc}%)`;
+            document.getElementById('res-final').innerText = `R$ ${final.toFixed(2)}`;
+        }
+
+        function copyProposalText() {
+            showToast("Proposta copiada!");
+        }
+
+        function saveSimulationAsSale() {
+            const name = document.getElementById('sim-client-name').value;
+            if(!name) { alert('Insira o nome do cliente.'); return; }
+            appData.sales.push({
+                id: Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                client: name,
+                process: document.getElementById('sim-client-cpf').value || '000',
+                service: 'Revisional',
+                totalVal: 300,
+                receivedVal: 100,
+                status: 'Aprovado',
+                parcels: []
+            });
+            saveToStorage();
+            showToast("Venda gerada com sucesso!");
+            switchTab('sales');
+        }
+
+        function renderSalesTable() {
+            const tbody = document.getElementById('sales-table-body');
+            tbody.innerHTML = '';
+            appData.sales.forEach(s => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3.5">${s.date}</td>
+                        <td class="p-3.5 font-bold">${s.client}</td>
+                        <td class="p-3.5">${s.process}</td>
+                        <td class="p-3.5">${s.service}</td>
+                        <td class="p-3.5">R$ ${s.totalVal.toFixed(2)}</td>
+                        <td class="p-3.5 text-emerald-600">R$ ${s.receivedVal.toFixed(2)}</td>
+                        <td class="p-3.5"><span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold">${s.status}</span></td>
+                        <td class="p-3.5 text-right">-</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function initApp() {
+            updateDashboard();
+            renderLeads();
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
