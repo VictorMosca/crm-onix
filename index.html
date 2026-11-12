@@ -178,18 +178,18 @@
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
-                                <span>Meta Mensal</span>
+                                <span id="dash-meta-title">Meta Mensal</span>
                                 <i class="fa-solid fa-bullseye text-brandGold"></i>
                             </div>
-                            <h3 id="dash-meta" class="text-2xl font-bold text-textDark">R$ 10.000,00</h3>
+                            <h3 id="dash-meta" class="text-2xl font-bold text-textDark">R$ 0,00</h3>
                         </div>
                         <div class="mt-4">
                             <div class="flex justify-between text-xs text-textMuted mb-1 font-medium">
                                 <span>Progresso</span>
-                                <span id="dash-meta-percent">3%</span>
+                                <span id="dash-meta-percent">0%</span>
                             </div>
                             <div class="w-full bg-lightBg h-2 rounded-full overflow-hidden border border-borderLight">
-                                <div id="dash-meta-bar" class="bg-brandGold h-full transition-all duration-500 rounded-full" style="width: 3%"></div>
+                                <div id="dash-meta-bar" class="bg-brandGold h-full transition-all duration-500 rounded-full" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -200,8 +200,8 @@
                             <i class="fa-solid fa-wallet text-emerald-400"></i>
                         </div>
                         <div>
-                            <h3 id="dash-recebido" class="text-2xl font-bold text-emerald-400">R$ 300,00</h3>
-                            <p class="text-xs text-textMuted mt-1">Acumulado no mês</p>
+                            <h3 id="dash-recebido" class="text-2xl font-bold text-emerald-400">R$ 0,00</h3>
+                            <p id="dash-recebido-sub" class="text-xs text-textMuted mt-1">Acumulado no mês</p>
                         </div>
                     </div>
 
@@ -211,7 +211,7 @@
                             <i class="fa-solid fa-chart-line text-brandGold"></i>
                         </div>
                         <div>
-                            <h3 id="dash-restante" class="text-2xl font-bold text-brandGold">R$ 9.700,00</h3>
+                            <h3 id="dash-restante" class="text-2xl font-bold text-brandGold">R$ 0,00</h3>
                             <p class="text-xs text-textMuted mt-1">Falta para bater meta</p>
                         </div>
                     </div>
@@ -222,7 +222,7 @@
                             <i class="fa-solid fa-bag-shopping text-emerald-400"></i>
                         </div>
                         <div>
-                            <h3 id="dash-num-vendas" class="text-2xl font-bold text-textDark">1</h3>
+                            <h3 id="dash-num-vendas" class="text-2xl font-bold text-textDark">0</h3>
                             <p class="text-xs text-textMuted mt-1">Contratos fechados</p>
                         </div>
                     </div>
@@ -286,19 +286,30 @@
 
             <!-- VIEW 2: MEUS LEADS -->
             <section id="tab-leads" class="tab-content hidden p-6 space-y-6">
-                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
-                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                        <button onclick="filterLeads('todos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brandGreen text-white transition shadow-sm">Todos</button>
-                        <button onclick="filterLeads('Novos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Novos</button>
-                        <button onclick="filterLeads('Em Contato')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Em Contato</button>
-                        <button onclick="filterLeads('Negociando')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Negociando</button>
-                        <button onclick="filterLeads('Jurídico')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Jurídico</button>
-                        <button onclick="filterLeads('Convertido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Convertido</button>
-                        <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Perdidos</button>
-                    </div>
-                    <div class="relative w-full sm:w-64">
-                        <input type="text" id="lead-search-input" oninput="renderLeads()" placeholder="Buscar por nome, processo..." class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark placeholder-textMuted focus:outline-none focus:border-brandGold">
-                        <i class="fa-solid fa-search absolute right-3.5 top-3 text-textMuted text-xs"></i>
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col gap-3">
+                    <div class="flex flex-col lg:flex-row gap-3 justify-between items-start lg:items-center">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="filterLeads('todos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brandGreen text-white transition shadow-sm">Todos</button>
+                            <button onclick="filterLeads('Novos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Novos</button>
+                            <button onclick="filterLeads('Em Contato')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Em Contato</button>
+                            <button onclick="filterLeads('Negociando')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Negociando</button>
+                            <button onclick="filterLeads('Jurídico')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Jurídico</button>
+                            <button onclick="filterLeads('Convertido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Convertido</button>
+                            <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Perdidos</button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+                            <!-- Filtro por Vendedor (Visível apenas para Dono e Admin) -->
+                            <div id="admin-seller-filter-wrapper" class="hidden">
+                                <select id="lead-seller-filter" onchange="renderLeads()" class="w-full sm:w-48 bg-lightBg border border-brandGold/40 rounded-xl px-3 py-2 text-xs text-brandGold font-semibold focus:outline-none">
+                                    <option value="todos">👥 Todos os Vendedores</option>
+                                    <option value="unassigned">⚠️ Sem Vendedor Atribuído</option>
+                                </select>
+                            </div>
+                            <div class="relative w-full sm:w-64">
+                                <input type="text" id="lead-search-input" oninput="renderLeads()" placeholder="Buscar por nome, processo..." class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark placeholder-textMuted focus:outline-none focus:border-brandGold">
+                                <i class="fa-solid fa-search absolute right-3.5 top-3 text-textMuted text-xs"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -334,8 +345,19 @@
                     </div>
 
                     <p class="text-xs text-textMuted">
-                        Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente e salvar na nuvem.
+                        Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente.
                     </p>
+
+                    <!-- Seletor de Destinatário na Importação (Para Dono e Admin) -->
+                    <div id="bulk-assign-wrapper" class="hidden bg-lightBg border border-brandGold/30 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-brandGold"><i class="fa-solid fa-user-tag mr-1"></i> Direcionar este lote para qual Comercial?</label>
+                            <span class="text-[11px] text-textMuted">Apenas o vendedor selecionado (além de Dono/Admin) verá estes leads.</span>
+                        </div>
+                        <select id="bulk-assign-select" class="bg-cardBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark font-semibold focus:outline-none focus:border-brandGold min-w-[220px]">
+                            <option value="">-- Sem atribuição (Apenas Diretoria) --</option>
+                        </select>
+                    </div>
 
                     <textarea id="bulk-import-textarea" oninput="processBulkText()" placeholder="Cole sua lista aqui, por exemplo:&#10;&#10;MARIA LUCINDA NASCIMENTO SILVA&#10;4006679-23.2026.8.26.0038&#10;(65) 99921-2621" class="w-full h-48 bg-lightBg border border-borderLight rounded-xl p-4 text-xs font-mono text-textDark focus:outline-none focus:border-brandGold resize-none"></textarea>
 
@@ -358,7 +380,7 @@
                 <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-sm text-textDark">Contratos e Vendas Fechadas</h3>
-                        <p class="text-xs text-textMuted">Acompanhamento financeiro compartilhado com a diretoria.</p>
+                        <p class="text-xs text-textMuted">Acompanhamento financeiro das vendas realizadas.</p>
                     </div>
                     <button onclick="switchTab('simulator')" class="bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-calculator text-brandGold"></i> Nova Proposta / Simulador
@@ -372,8 +394,8 @@
                                 <tr>
                                     <th class="p-3.5">Data</th>
                                     <th class="p-3.5">Cliente</th>
+                                    <th class="p-3.5">Responsável</th>
                                     <th class="p-3.5">Processo</th>
-                                    <th class="p-3.5">Serviço</th>
                                     <th class="p-3.5">Valor Total</th>
                                     <th class="p-3.5">Recebido</th>
                                     <th class="p-3.5">Status</th>
@@ -404,8 +426,8 @@
                                     <input type="text" id="sim-client-cpf" placeholder="000.000.000-00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-textMuted mb-1">Banco / Órgão</label>
-                                    <input type="text" id="sim-bank" placeholder="Ex: Banco Itaú" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                    <label class="block text-xs font-medium text-textMuted mb-1">Valor do Contrato / Honorários (R$)</label>
+                                    <input type="number" id="sim-contract-fee" value="300" placeholder="300.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                             </div>
 
@@ -470,16 +492,19 @@
 
             <!-- VIEW 6: RANKING -->
             <section id="tab-ranking" class="tab-content hidden p-6 space-y-6">
-                <div class="bg-cardBg border border-borderLight p-6 rounded-2xl shadow-sm text-center max-w-md mx-auto space-y-4">
-                    <div class="w-16 h-16 rounded-full bg-brandGold/15 text-brandGold flex items-center justify-center mx-auto text-2xl font-bold border border-brandGold/30">
-                        <i class="fa-solid fa-trophy"></i>
+                <div class="bg-cardBg border border-borderLight p-6 rounded-2xl shadow-sm max-w-2xl mx-auto space-y-4">
+                    <div class="text-center space-y-2">
+                        <div class="w-14 h-14 rounded-full bg-brandGold/15 text-brandGold flex items-center justify-center mx-auto text-xl font-bold border border-brandGold/30">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="font-bold text-base text-textDark">Ranking Comercial Ónix Próspera</h3>
+                        <p class="text-xs text-textMuted">Acompanhamento de desempenho e atingimento de meta individual.</p>
                     </div>
-                    <h3 class="font-bold text-base text-textDark">Ranking de Vendedores</h3>
-                    <p class="text-xs text-textMuted">Você está atualmente na <strong class="text-brandGold">1ª posição</strong> da equipe Ónix Próspera neste mês.</p>
+                    <div id="ranking-list-container" class="space-y-2 pt-2"></div>
                 </div>
             </section>
 
-            <!-- VIEW 7: PAINEL ADMIN (GERENCIADOR DE LOGINS E REGRAS) -->
+            <!-- VIEW 7: PAINEL ADMIN (GERENCIADOR DE LOGINS, METAS E REGRAS) -->
             <section id="tab-admin" class="tab-content hidden p-6 space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Formulário para Criar Novo Login -->
@@ -491,11 +516,11 @@
                         <div class="space-y-3">
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Nome do Colaborador</label>
-                                <input type="text" id="admin-new-name" placeholder="Ex: Maria Silva" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                <input type="text" id="admin-new-name" placeholder="Ex: Luiz Paulo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">E-mail / Usuário de Login</label>
-                                <input type="text" id="admin-new-email" placeholder="maria@onix.com" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                <input type="text" id="admin-new-email" placeholder="luiz@onix.com" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Senha</label>
@@ -503,12 +528,16 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Perfil de Acesso</label>
-                                <select id="admin-new-role" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                <select id="admin-new-role" onchange="toggleNewUserMetaField()" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     <option value="comercial">💼 Comercial (Atendimento / Leads)</option>
                                     <option value="juridico">⚖️ Jurídico (Processos Pós-Negociação)</option>
                                     <option value="admin">⚙️ Administrador</option>
                                     <option value="dono">👑 Dono (Acesso Total)</option>
                                 </select>
+                            </div>
+                            <div id="admin-new-meta-wrapper">
+                                <label class="block text-xs font-medium text-brandGold mb-1">Meta Mensal Individual (R$)</label>
+                                <input type="number" id="admin-new-meta" value="10000" placeholder="Ex: 10000" class="w-full bg-lightBg border border-brandGold/40 rounded-xl px-3.5 py-2 text-xs text-textDark font-bold focus:outline-none focus:border-brandGold">
                             </div>
                             <button onclick="createNewUser()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-2.5 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-plus text-brandGold"></i> Cadastrar Usuário na Nuvem
@@ -524,11 +553,14 @@
                         </div>
                     </div>
 
-                    <!-- Lista de Logins Ativos -->
+                    <!-- Lista de Logins Ativos e Metas Individuais -->
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm lg:col-span-2 space-y-4">
-                        <h3 class="font-bold text-sm text-textDark border-b border-borderLight pb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-brandGold"></i> Logins Sincronizados na Nuvem
-                        </h3>
+                        <div class="border-b border-borderLight pb-3">
+                            <h3 class="font-bold text-sm text-textDark flex items-center gap-2">
+                                <i class="fa-solid fa-users-gear text-brandGold"></i> Logins & Metas Individuais Sincronizados
+                            </h3>
+                            <p class="text-[11px] text-textMuted mt-0.5">Você pode editar a meta mensal de cada vendedor comercial diretamente na tabela abaixo.</p>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-lightBg text-textMuted border-b border-borderLight uppercase font-semibold">
@@ -537,6 +569,7 @@
                                         <th class="p-3">Login / E-mail</th>
                                         <th class="p-3">Senha</th>
                                         <th class="p-3">Perfil</th>
+                                        <th class="p-3">Meta Mensal (R$)</th>
                                         <th class="p-3 text-right">Ação</th>
                                     </tr>
                                 </thead>
@@ -589,6 +622,13 @@
                         <input type="date" id="modal-last-contact" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                     </div>
                 </div>
+                <!-- Atribuição de Vendedor (Para Dono/Admin) -->
+                <div id="modal-assign-wrapper">
+                    <label class="block text-xs font-bold text-brandGold mb-1">Responsável Comercial (Quem vai atender)</label>
+                    <select id="modal-assign-user" class="w-full bg-lightBg border border-brandGold/40 rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                        <option value="">-- Sem atribuição --</option>
+                    </select>
+                </div>
             </div>
             <div class="p-4 border-t border-borderLight bg-lightBg flex justify-end gap-2">
                 <button onclick="closeLeadModal()" class="px-4 py-2 rounded-xl text-xs text-textMuted hover:text-textDark transition font-medium">Cancelar</button>
@@ -624,18 +664,13 @@
             alertDays: 3,
             metaMonthly: 10000.00,
             users: [
-                { id: 1, name: "Diretoria Executiva", email: "dono@onix.com", pass: "123456", role: "dono" },
-                { id: 2, name: "Administração TI", email: "admin@onix.com", pass: "123456", role: "admin" },
-                { id: 3, name: "Equipe Jurídica", email: "juridico@onix.com", pass: "123456", role: "juridico" },
-                { id: 4, name: "Luiz Paulo Corrêa", email: "comercial@onix.com", pass: "123456", role: "comercial" }
+                { id: 1, name: "Diretoria Executiva", email: "dono@onix.com", pass: "123456", role: "dono", meta: 0 },
+                { id: 2, name: "Administração TI", email: "admin@onix.com", pass: "123456", role: "admin", meta: 0 },
+                { id: 3, name: "Equipe Jurídica", email: "juridico@onix.com", pass: "123456", role: "juridico", meta: 0 },
+                { id: 4, name: "Luiz Paulo Corrêa", email: "comercial@onix.com", pass: "123456", role: "comercial", meta: 10000 }
             ],
-            leads: [
-                { id: 1, name: "Thiago Gualberto Caju", phone: "(19) 99907-0501", process: "4020058-79.2026.8.26.0477", status: "Em Contato", lastContact: "2026-10-10", notes: "" },
-                { id: 2, name: "Elaine de Barros Martiniano", phone: "(19) 98985-0480", process: "4020352-04.2026.8.26.0477", status: "Negociando", lastContact: "2026-10-12", notes: "" }
-            ],
-            sales: [
-                { id: 1, date: "2026-11-08", client: "Thiago Lima Siqueira", process: "4020058-79.2026.8.26.077", service: "Revisional de Financiamento", totalVal: 300.00, receivedVal: 300.00, status: "Aprovado" }
-            ]
+            leads: [],
+            sales: []
         };
 
         let appData = JSON.parse(JSON.stringify(defaultData));
@@ -662,6 +697,9 @@
             }
 
             if (currentUser) {
+                const updatedMe = appData.users.find(u => u.id === currentUser.id);
+                if (updatedMe) currentUser = updatedMe;
+                populateCommercialSelectors();
                 refreshActiveView();
             }
         });
@@ -676,12 +714,89 @@
             });
         }
 
+        function isAdminOrOwner() {
+            return currentUser && (currentUser.role === 'dono' || currentUser.role === 'admin');
+        }
+
+        function getCommercialUsers() {
+            return appData.users.filter(u => u.role === 'comercial');
+        }
+
+        function getUserNameById(userId) {
+            if (!userId) return 'Não atribuído';
+            const u = appData.users.find(user => String(user.id) === String(userId));
+            return u ? u.name : 'Não atribuído';
+        }
+
+        function populateCommercialSelectors() {
+            const sellers = getCommercialUsers();
+            
+            // 1. Filtro na aba Meus Leads
+            const filterSel = document.getElementById('lead-seller-filter');
+            if (filterSel) {
+                const prev = filterSel.value;
+                filterSel.innerHTML = `<option value="todos">👥 Todos os Vendedores</option><option value="unassigned">⚠️ Sem Vendedor Atribuído</option>`;
+                sellers.forEach(s => {
+                    filterSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
+                });
+                if ([...filterSel.options].some(o => o.value === prev)) filterSel.value = prev;
+            }
+
+            // 2. Seletor na Importação em Lote
+            const bulkSel = document.getElementById('bulk-assign-select');
+            if (bulkSel) {
+                const prev = bulkSel.value;
+                bulkSel.innerHTML = `<option value="">-- Sem atribuição (Apenas Diretoria) --</option>`;
+                sellers.forEach(s => {
+                    bulkSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
+                });
+                if ([...bulkSel.options].some(o => o.value === prev)) bulkSel.value = prev;
+            }
+
+            // 3. Seletor no Modal de Novo Lead
+            const modalSel = document.getElementById('modal-assign-user');
+            if (modalSel) {
+                modalSel.innerHTML = `<option value="">-- Sem atribuição --</option>`;
+                sellers.forEach(s => {
+                    modalSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
+                });
+            }
+        }
+
+        // Filtro central de visibilidade por perfil
+        function getVisibleLeadsForCurrentUser() {
+            if (!currentUser) return [];
+            const role = currentUser.role;
+
+            if (role === 'dono' || role === 'admin') {
+                return appData.leads;
+            }
+            if (role === 'comercial') {
+                // Comercial vê APENAS os leads atribuídos ao seu ID e que ainda não foram enviados ao Jurídico
+                return appData.leads.filter(l => String(l.assignedTo) === String(currentUser.id) && l.status !== 'Jurídico');
+            }
+            if (role === 'juridico') {
+                return appData.leads.filter(l => l.status === 'Jurídico' || l.status === 'Convertido');
+            }
+            return [];
+        }
+
+        function getVisibleSalesForCurrentUser() {
+            if (!currentUser) return [];
+            if (isAdminOrOwner()) return appData.sales;
+            if (currentUser.role === 'comercial') {
+                return appData.sales.filter(s => String(s.sellerId) === String(currentUser.id));
+            }
+            return appData.sales;
+        }
+
         function refreshActiveView() {
             if(activeTab === 'dashboard') updateDashboard();
             if(activeTab === 'leads') renderLeads();
             if(activeTab === 'negotiating') renderNegotiating();
             if(activeTab === 'juridico') renderJuridico();
             if(activeTab === 'sales') renderSalesTable();
+            if(activeTab === 'ranking') renderRanking();
             if(activeTab === 'admin') renderAdminUsers();
         }
 
@@ -714,10 +829,14 @@
             document.getElementById('logged-user-name').innerText = foundUser.name;
             document.getElementById('user-initials').innerText = foundUser.name.substring(0, 2).toUpperCase();
 
-            if (foundUser.role === 'dono' || foundUser.role === 'admin') {
+            if (isAdminOrOwner()) {
                 document.getElementById('nav-admin').classList.remove('hidden');
+                document.getElementById('admin-seller-filter-wrapper').classList.remove('hidden');
+                document.getElementById('bulk-assign-wrapper').classList.remove('hidden');
             } else {
                 document.getElementById('nav-admin').classList.add('hidden');
+                document.getElementById('admin-seller-filter-wrapper').classList.add('hidden');
+                document.getElementById('bulk-assign-wrapper').classList.add('hidden');
             }
 
             if (foundUser.role === 'comercial') {
@@ -726,6 +845,7 @@
                 document.getElementById('nav-juridico').classList.remove('hidden');
             }
 
+            populateCommercialSelectors();
             switchTab('dashboard');
         }
 
@@ -733,6 +853,16 @@
             currentUser = null;
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function toggleNewUserMetaField() {
+            const role = document.getElementById('admin-new-role').value;
+            const wrapper = document.getElementById('admin-new-meta-wrapper');
+            if (role === 'comercial') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+            }
         }
 
         function renderAdminUsers() {
@@ -748,12 +878,20 @@
             };
 
             appData.users.forEach(u => {
+                const metaCell = u.role === 'comercial'
+                    ? `<div class="flex items-center gap-1.5">
+                         <input type="number" id="meta-input-${u.id}" value="${u.meta || 0}" class="w-24 bg-lightBg border border-brandGold/40 rounded-lg px-2 py-1 text-xs text-brandGold font-bold">
+                         <button onclick="updateUserMeta(${u.id})" title="Salvar Meta" class="bg-brandGold text-black px-2 py-1 rounded-lg text-[11px] font-bold hover:opacity-90">OK</button>
+                       </div>`
+                    : `<span class="text-textMuted text-[11px]">—</span>`;
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/60">
                         <td class="p-3 font-bold text-textDark">${u.name}</td>
                         <td class="p-3 text-textMuted">${u.email}</td>
                         <td class="p-3 font-mono text-textMuted">${u.pass}</td>
                         <td class="p-3"><span class="bg-brandGreen/30 text-emerald-400 border border-brandGreen/50 px-2 py-0.5 rounded-full font-semibold">${roleLabels[u.role] || u.role}</span></td>
+                        <td class="p-3">${metaCell}</td>
                         <td class="p-3 text-right">
                             ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-400 hover:underline font-semibold">Remover</button>` : '<span class="text-textMuted text-[10px]">Principal</span>'}
                         </td>
@@ -762,11 +900,24 @@
             });
         }
 
+        function updateUserMeta(userId) {
+            const input = document.getElementById(`meta-input-${userId}`);
+            if (!input) return;
+            const newMeta = parseFloat(input.value) || 0;
+            const user = appData.users.find(u => u.id === userId);
+            if (user) {
+                user.meta = newMeta;
+                saveToCloud();
+                showToast(`Meta de ${user.name} atualizada para R$ ${newMeta.toLocaleString('pt-BR', {minimumFractionDigits: 2})}!`);
+            }
+        }
+
         function createNewUser() {
             const name = document.getElementById('admin-new-name').value.trim();
             const email = document.getElementById('admin-new-email').value.trim().toLowerCase();
             const pass = document.getElementById('admin-new-pass').value.trim();
             const role = document.getElementById('admin-new-role').value;
+            const meta = role === 'comercial' ? (parseFloat(document.getElementById('admin-new-meta').value) || 0) : 0;
 
             if (!name || !email || !pass) {
                 alert("Preencha Nome, E-mail e Senha para criar o login.");
@@ -778,7 +929,7 @@
                 return;
             }
 
-            appData.users.push({ id: Date.now(), name, email, pass, role });
+            appData.users.push({ id: Date.now(), name, email, pass, role, meta });
             saveToCloud();
 
             document.getElementById('admin-new-name').value = '';
@@ -827,7 +978,7 @@
                 sales: 'Minhas Vendas',
                 simulator: 'Simulador de Propostas',
                 ranking: 'Ranking',
-                admin: 'Painel Admin & Logins'
+                admin: 'Painel Admin & Metas'
             };
             document.getElementById('current-tab-title').innerText = titles[tabId] || 'CRM';
             refreshActiveView();
@@ -837,12 +988,9 @@
             const today = new Date();
             const limitDays = appData.alertDays || 3;
             let alerts = [];
-            const role = currentUser ? currentUser.role : 'dono';
+            const visibleLeads = getVisibleLeadsForCurrentUser();
 
-            appData.leads.forEach(lead => {
-                if (role === 'comercial' && (lead.status === 'Jurídico' || lead.status === 'Convertido')) return;
-                if (role === 'juridico' && lead.status !== 'Jurídico') return;
-
+            visibleLeads.forEach(lead => {
                 if (lead.status === 'Em Contato' || lead.status === 'Negociando' || lead.status === 'Jurídico') {
                     const lastDate = new Date(lead.lastContact);
                     const diffDays = Math.floor(Math.abs(today - lastDate) / (1000 * 60 * 60 * 24));
@@ -860,13 +1008,8 @@
         }
 
         function updateDashboard() {
-            const role = currentUser ? currentUser.role : 'dono';
-            let leadsVisiveis = appData.leads;
-            if (role === 'comercial') {
-                leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
-            } else if (role === 'juridico') {
-                leadsVisiveis = appData.leads.filter(l => l.status === 'Jurídico' || l.status === 'Convertido');
-            }
+            const leadsVisiveis = getVisibleLeadsForCurrentUser();
+            const salesVisiveis = getVisibleSalesForCurrentUser();
 
             document.getElementById('dash-alert-days-label').innerText = appData.alertDays || 3;
             document.getElementById('count-total').innerText = leadsVisiveis.length;
@@ -877,14 +1020,27 @@
             document.getElementById('count-convertidos').innerText = leadsVisiveis.filter(l => l.status === 'Convertido').length;
             document.getElementById('count-perdidos').innerText = leadsVisiveis.filter(l => l.status === 'Perdido').length;
 
-            let totalReceived = appData.sales.reduce((acc, sale) => acc + sale.receivedVal, 0);
-            let restante = Math.max(0, appData.metaMonthly - totalReceived);
-            let percent = Math.min(100, Math.round((totalReceived / appData.metaMonthly) * 100));
+            // Cálculo de Meta: Individual para Comercial / Geral (soma da equipe) para Dono e Admin
+            let targetMeta = 0;
+            if (currentUser && currentUser.role === 'comercial') {
+                targetMeta = parseFloat(currentUser.meta) || 0;
+                document.getElementById('dash-meta-title').innerText = 'Minha Meta Mensal';
+                document.getElementById('dash-recebido-sub').innerText = 'Minhas vendas no mês';
+            } else {
+                const sellersMetaSum = getCommercialUsers().reduce((acc, u) => acc + (parseFloat(u.meta) || 0), 0);
+                targetMeta = sellersMetaSum > 0 ? sellersMetaSum : appData.metaMonthly;
+                document.getElementById('dash-meta-title').innerText = 'Meta Global Equipe';
+                document.getElementById('dash-recebido-sub').innerText = 'Faturamento total no mês';
+            }
 
-            document.getElementById('dash-meta').innerText = `R$ ${appData.metaMonthly.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            let totalReceived = salesVisiveis.reduce((acc, sale) => acc + sale.receivedVal, 0);
+            let restante = Math.max(0, targetMeta - totalReceived);
+            let percent = targetMeta > 0 ? Math.min(100, Math.round((totalReceived / targetMeta) * 100)) : 0;
+
+            document.getElementById('dash-meta').innerText = `R$ ${targetMeta.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-recebido').innerText = `R$ ${totalReceived.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-restante').innerText = `R$ ${restante.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('dash-num-vendas').innerText = appData.sales.length;
+            document.getElementById('dash-num-vendas').innerText = salesVisiveis.length;
             document.getElementById('dash-meta-percent').innerText = `${percent}%`;
             document.getElementById('dash-meta-bar').style.width = `${percent}%`;
 
@@ -893,10 +1049,11 @@
             const container = document.getElementById('alerts-container');
             container.innerHTML = alerts.length === 0 ? `<p class="text-xs text-textMuted italic py-2">Nenhum alerta pendente.</p>` : '';
             alerts.forEach(alert => {
+                const ownerTag = isAdminOrOwner() ? `<span class="text-[10px] text-brandGold">(${getUserNameById(alert.assignedTo)})</span>` : '';
                 container.innerHTML += `
                     <div class="bg-lightBg p-2.5 rounded-xl border border-amber-500/30 flex items-center justify-between text-xs">
                         <div>
-                            <span class="font-bold text-textDark block">${alert.name}</span>
+                            <span class="font-bold text-textDark block">${alert.name} ${ownerTag}</span>
                             <span class="text-[10px] text-amber-400 font-medium">Frio / Inativo há ${alert.daysInactive} dias</span>
                         </div>
                         <button onclick="openWhatsApp('${alert.phone}', '${alert.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold">Chamar</button>
@@ -911,38 +1068,87 @@
             renderLeads();
         }
 
+        function assignLeadToUser(leadId, userId) {
+            const lead = appData.leads.find(l => l.id === leadId);
+            if (lead) {
+                lead.assignedTo = userId ? Number(userId) : '';
+                saveToCloud();
+                showToast(`Lead direcionado para ${getUserNameById(lead.assignedTo)}!`);
+            }
+        }
+
+        function deleteLead(leadId) {
+            if (!isAdminOrOwner()) return;
+            const lead = appData.leads.find(l => l.id === leadId);
+            if (!lead) return;
+            if (confirm(`Tem certeza que deseja APAGAR definitivamente o lead "${lead.name}"?`)) {
+                appData.leads = appData.leads.filter(l => l.id !== leadId);
+                saveToCloud();
+                showToast("Lead excluído do sistema.");
+            }
+        }
+
         function renderLeads() {
             const container = document.getElementById('leads-list-container');
             const search = document.getElementById('lead-search-input').value.toLowerCase();
+            const sellerFilter = document.getElementById('lead-seller-filter') ? document.getElementById('lead-seller-filter').value : 'todos';
             container.innerHTML = '';
 
-            const role = currentUser ? currentUser.role : 'dono';
-            let leadsVisiveis = appData.leads;
-            if (role === 'comercial') {
-                leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
-            } else if (role === 'juridico') {
-                leadsVisiveis = appData.leads.filter(l => l.status === 'Jurídico' || l.status === 'Convertido');
-            }
+            let leadsVisiveis = getVisibleLeadsForCurrentUser();
 
             let filtered = leadsVisiveis.filter(lead => {
                 const matchStatus = currentFilter === 'todos' || lead.status === currentFilter;
                 const matchSearch = lead.name.toLowerCase().includes(search) || lead.phone.includes(search) || lead.process.includes(search);
-                return matchStatus && matchSearch;
+                
+                let matchSeller = true;
+                if (isAdminOrOwner()) {
+                    if (sellerFilter === 'unassigned') {
+                        matchSeller = !lead.assignedTo;
+                    } else if (sellerFilter !== 'todos') {
+                        matchSeller = String(lead.assignedTo) === String(sellerFilter);
+                    }
+                }
+                return matchStatus && matchSearch && matchSeller;
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum lead encontrado para o seu perfil.</p>`;
+                container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum lead encontrado para este filtro.</p>`;
                 return;
             }
 
+            const sellers = getCommercialUsers();
+
             filtered.forEach(lead => {
+                // Controles exclusivos para Dono e Admin: Reatribuir Vendedor + Botão Excluir
+                let adminControls = '';
+                if (isAdminOrOwner()) {
+                    let sellerOptions = `<option value="">⚠️ Sem vendedor</option>`;
+                    sellers.forEach(s => {
+                        const selected = String(lead.assignedTo) === String(s.id) ? 'selected' : '';
+                        sellerOptions += `<option value="${s.id}" ${selected}>💼 ${s.name}</option>`;
+                    });
+
+                    adminControls = `
+                        <select onchange="assignLeadToUser(${lead.id}, this.value)" title="Atribuir lead para colaborador" class="bg-lightBg border border-brandGold/40 text-xs text-brandGold font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none">
+                            ${sellerOptions}
+                        </select>
+                        <button onclick="deleteLead(${lead.id})" title="Apagar Lead" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    `;
+                }
+
                 container.innerHTML += `
-                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
                         <div>
-                            <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
-                            <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
+                                ${isAdminOrOwner() ? `<span class="text-[10px] bg-brandGold/15 text-brandGold border border-brandGold/30 px-2 py-0.5 rounded-full font-semibold">${getUserNameById(lead.assignedTo)}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-textMuted mt-0.5">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
-                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+                            ${adminControls}
                             <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
                                 <i class="fa-brands fa-whatsapp"></i> WhatsApp
                             </button>
@@ -963,21 +1169,22 @@
         function renderNegotiating() {
             const container = document.getElementById('negotiating-list-container');
             container.innerHTML = '';
-            const negs = appData.leads.filter(l => l.status === 'Negociando');
+            const negs = getVisibleLeadsForCurrentUser().filter(l => l.status === 'Negociando');
             if (negs.length === 0) {
                 container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum lead na fase de negociação.</p>`;
                 return;
             }
             negs.forEach(lead => {
                 container.innerHTML += `
-                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
+                            <h4 class="font-bold text-xs text-textDark">${lead.name} ${isAdminOrOwner() ? `<span class="text-brandGold font-normal">(${getUserNameById(lead.assignedTo)})</span>` : ''}</h4>
                             <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex gap-2">
                             <button onclick="updateLeadStatus(${lead.id}, 'Jurídico')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Enviar para Jurídico ⚖️</button>
                             <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
+                            ${isAdminOrOwner() ? `<button onclick="deleteLead(${lead.id})" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
                 `;
@@ -987,14 +1194,14 @@
         function renderJuridico() {
             const container = document.getElementById('juridico-list-container');
             container.innerHTML = '';
-            const jur = appData.leads.filter(l => l.status === 'Jurídico');
+            const jur = getVisibleLeadsForCurrentUser().filter(l => l.status === 'Jurídico');
             if (jur.length === 0) {
                 container.innerHTML = `<p class="text-xs text-textMuted italic p-4 text-center">Nenhum processo atualmente sob análise do Jurídico.</p>`;
                 return;
             }
             jur.forEach(lead => {
                 container.innerHTML += `
-                    <div class="bg-cardBg border border-indigo-500/30 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div class="bg-cardBg border border-indigo-500/30 p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
                             <span class="text-[10px] font-bold text-indigo-400 uppercase">Em Análise Processual</span>
                             <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
@@ -1002,6 +1209,7 @@
                         </div>
                         <div class="flex gap-2">
                             <button onclick="updateLeadStatus(${lead.id}, 'Convertido')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Finalizar / Fechar Venda</button>
+                            ${isAdminOrOwner() ? `<button onclick="deleteLead(${lead.id})" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
                 `;
@@ -1048,13 +1256,14 @@
 
                 if (name) {
                     parsedBulkLeads.push({
-                        id: Date.now() + Math.floor(Math.random() * 10000),
+                        id: Date.now() + Math.floor(Math.random() * 100000),
                         name: name,
                         phone: phones.length > 0 ? phones.join(' / ') : 'Sem telefone',
                         process: processNumber || 'N/A',
                         status: 'Novos',
                         lastContact: new Date().toISOString().split('T')[0],
-                        notes: 'Importado em Lote'
+                        notes: 'Importado em Lote',
+                        assignedTo: ''
                     });
                 }
             });
@@ -1078,9 +1287,21 @@
 
         function confirmBulkImport() {
             if (parsedBulkLeads.length === 0) return;
-            appData.leads.unshift(...parsedBulkLeads);
+
+            let targetSellerId = '';
+            if (isAdminOrOwner()) {
+                const selVal = document.getElementById('bulk-assign-select').value;
+                targetSellerId = selVal ? Number(selVal) : '';
+            } else if (currentUser && currentUser.role === 'comercial') {
+                targetSellerId = currentUser.id;
+            }
+
+            const readyLeads = parsedBulkLeads.map(l => ({ ...l, assignedTo: targetSellerId }));
+            appData.leads.unshift(...readyLeads);
             saveToCloud();
-            showToast(`${parsedBulkLeads.length} leads enviados para a nuvem!`);
+
+            const targetMsg = targetSellerId ? ` direcionados para ${getUserNameById(targetSellerId)}` : '';
+            showToast(`${readyLeads.length} leads importados${targetMsg}!`);
             document.getElementById('bulk-import-textarea').value = '';
             processBulkText();
             switchTab('leads');
@@ -1107,6 +1328,15 @@
             document.getElementById('modal-process').value = "";
             document.getElementById('modal-status').value = "Novos";
             document.getElementById('modal-last-contact').value = new Date().toISOString().split('T')[0];
+            
+            populateCommercialSelectors();
+            const assignWrapper = document.getElementById('modal-assign-wrapper');
+            if (isAdminOrOwner()) {
+                assignWrapper.classList.remove('hidden');
+            } else {
+                assignWrapper.classList.add('hidden');
+            }
+
             document.getElementById('lead-modal').classList.remove('hidden');
             document.getElementById('lead-modal').classList.add('flex');
         }
@@ -1117,9 +1347,17 @@
         }
 
         function saveLeadFromModal() {
-            const name = document.getElementById('modal-name').value;
-            const phone = document.getElementById('modal-phone').value;
+            const name = document.getElementById('modal-name').value.trim();
+            const phone = document.getElementById('modal-phone').value.trim();
             if(!name || !phone) { alert('Preencha nome e telefone.'); return; }
+
+            let assignedTo = '';
+            if (isAdminOrOwner()) {
+                const selVal = document.getElementById('modal-assign-user').value;
+                assignedTo = selVal ? Number(selVal) : '';
+            } else if (currentUser && currentUser.role === 'comercial') {
+                assignedTo = currentUser.id;
+            }
             
             appData.leads.unshift({
                 id: Date.now(),
@@ -1127,11 +1365,12 @@
                 process: document.getElementById('modal-process').value || 'N/A',
                 status: document.getElementById('modal-status').value,
                 lastContact: document.getElementById('modal-last-contact').value,
-                notes: ''
+                notes: '',
+                assignedTo
             });
             saveToCloud();
             closeLeadModal();
-            showToast("Lead salvo na nuvem para toda a equipe!");
+            showToast("Lead salvo na nuvem!");
         }
 
         function calculateSimulation() {
@@ -1151,16 +1390,20 @@
         }
 
         function saveSimulationAsSale() {
-            const name = document.getElementById('sim-client-name').value;
+            const name = document.getElementById('sim-client-name').value.trim();
+            const fee = parseFloat(document.getElementById('sim-contract-fee').value) || 300;
             if(!name) { alert('Insira o nome do cliente.'); return; }
+
             appData.sales.push({
                 id: Date.now(),
                 date: new Date().toISOString().split('T')[0],
                 client: name,
-                process: document.getElementById('sim-client-cpf').value || '000',
+                sellerId: currentUser ? currentUser.id : '',
+                sellerName: currentUser ? currentUser.name : 'Diretoria',
+                process: document.getElementById('sim-client-cpf').value || 'N/A',
                 service: 'Revisional',
-                totalVal: 300,
-                receivedVal: 300,
+                totalVal: fee,
+                receivedVal: fee,
                 status: 'Aprovado'
             });
             saveToCloud();
@@ -1171,17 +1414,56 @@
         function renderSalesTable() {
             const tbody = document.getElementById('sales-table-body');
             tbody.innerHTML = '';
-            appData.sales.forEach(s => {
+            const salesVisiveis = getVisibleSalesForCurrentUser();
+            if (salesVisiveis.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-textMuted italic">Nenhuma venda registrada ainda.</td></tr>`;
+                return;
+            }
+            salesVisiveis.forEach(s => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/60">
                         <td class="p-3.5">${s.date}</td>
                         <td class="p-3.5 font-bold">${s.client}</td>
+                        <td class="p-3.5 text-brandGold font-semibold">${s.sellerName || 'Equipe'}</td>
                         <td class="p-3.5">${s.process}</td>
-                        <td class="p-3.5">${s.service}</td>
-                        <td class="p-3.5">R$ ${s.totalVal.toFixed(2)}</td>
-                        <td class="p-3.5 text-emerald-400">R$ ${s.receivedVal.toFixed(2)}</td>
+                        <td class="p-3.5">R$ ${s.totalVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3.5 text-emerald-400 font-bold">R$ ${s.receivedVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                         <td class="p-3.5"><span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">${s.status}</span></td>
                     </tr>
+                `;
+            });
+        }
+
+        function renderRanking() {
+            const container = document.getElementById('ranking-list-container');
+            container.innerHTML = '';
+            const sellers = getCommercialUsers();
+            if (sellers.length === 0) {
+                container.innerHTML = `<p class="text-xs text-textMuted text-center italic">Nenhum colaborador comercial cadastrado.</p>`;
+                return;
+            }
+
+            const rankingData = sellers.map(seller => {
+                const sold = appData.sales
+                    .filter(s => String(s.sellerId) === String(seller.id))
+                    .reduce((acc, s) => acc + s.receivedVal, 0);
+                const meta = parseFloat(seller.meta) || 0;
+                const pct = meta > 0 ? Math.min(100, Math.round((sold / meta) * 100)) : 0;
+                return { ...seller, sold, meta, pct };
+            }).sort((a, b) => b.sold - a.sold);
+
+            rankingData.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-lightBg border border-borderLight p-3.5 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-brandGold/20 text-brandGold font-bold text-xs flex items-center justify-center">${index + 1}º</span>
+                            <div>
+                                <p class="text-xs font-bold text-textDark">${item.name}</p>
+                                <p class="text-[11px] text-textMuted">Meta: R$ ${item.meta.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${item.pct}%)</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-extrabold text-emerald-400">R$ ${item.sold.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                    </div>
                 `;
             });
         }
