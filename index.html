@@ -61,12 +61,12 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Usuário / E-mail de Acesso</label>
-                    <input type="text" id="login-user" value="dono@onix.com" placeholder="Digite seu e-mail" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
+                    <input type="text" id="login-user" placeholder="Digite seu e-mail" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Senha Individual</label>
-                    <input type="password" id="login-pass" value="123456" placeholder="Digite sua senha" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
+                    <input type="password" id="login-pass" placeholder="Digite sua senha" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
                 </div>
 
                 <p id="login-error-msg" class="text-xs text-red-400 font-semibold hidden text-center">Usuário ou senha incorretos.</p>
@@ -74,7 +74,6 @@
                 <button onclick="handleLogin()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket text-brandGold"></i> Entrar no Sistema CRM
                 </button>
-        
             </div>
         </div>
     </div>
@@ -644,7 +643,6 @@
         let parsedBulkLeads = [];
         let activeTab = 'dashboard';
 
-        // Listener em Tempo Real do Firebase
         crmRef.on('value', (snapshot) => {
             const val = snapshot.val();
             const statusEl = document.getElementById('cloud-status-login');
@@ -660,7 +658,6 @@
                 appData.leads = val.leads ? Object.values(val.leads) : [];
                 appData.sales = val.sales ? Object.values(val.sales) : [];
             } else {
-                // Primeira vez: popula o banco no Firebase
                 saveToCloud();
             }
 
