@@ -11,59 +11,67 @@
             theme: {
                 extend: {
                     colors: {
-                        lightBg: '#F8FAFC',
-                        cardBg: '#FFFFFF',
+                        lightBg: '#09090B',
+                        cardBg: '#18181B',
                         brandGreen: '#064E3B',
-                        brandGreenHover: '#022C22',
+                        brandGreenHover: '#047857',
                         brandGold: '#D97706',
                         brandGoldLight: '#FEF3C7',
-                        borderLight: '#E2E8F0',
-                        textDark: '#1E293B',
-                        textMuted: '#64748B'
+                        borderLight: '#27272A',
+                        textDark: '#F8FAFC',
+                        textMuted: '#94A3B8'
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (Compat for single-file HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #F1F5F9; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #09090B; }
+        ::-webkit-scrollbar-thumb { background: #27272A; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #064E3B; }
     </style>
 </head>
 <body class="bg-lightBg text-textDark min-h-screen flex flex-col antialiased selection:bg-brandGold selection:text-white">
 
     <!-- TELA DE LOGIN -->
-    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-brandGreen/90 backdrop-blur-sm p-4">
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
         <div class="bg-cardBg border border-borderLight rounded-3xl w-full max-w-md p-8 shadow-2xl space-y-6">
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 rounded-2xl bg-brandGreen/10 text-brandGreen flex items-center justify-center mx-auto text-2xl font-bold border border-brandGreen/20">
+                <div class="w-16 h-16 rounded-2xl bg-brandGreen/20 text-brandGreen flex items-center justify-center mx-auto text-2xl font-bold border border-brandGreen/40">
                     <i class="fa-solid fa-shield-halved text-brandGold"></i>
                 </div>
                 <h1 class="font-extrabold text-xl text-textDark tracking-wider">ÓNIX PRÓSPERA</h1>
                 <p class="text-xs text-textMuted tracking-widest uppercase font-semibold">Soluções Financeiras Ltda.</p>
+                <div id="cloud-status-login" class="inline-flex items-center gap-1.5 text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-semibold">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Conectando à nuvem...
+                </div>
             </div>
 
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Usuário / E-mail de Acesso</label>
-                    <input type="text" id="login-user" value="dono@onix.com" placeholder="Digite seu e-mail" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGreen">
+                    <input type="text" id="login-user" value="dono@onix.com" placeholder="Digite seu e-mail" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-textMuted uppercase mb-1.5">Senha Individual</label>
-                    <input type="password" id="login-pass" value="123456" placeholder="Digite sua senha" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGreen">
+                    <input type="password" id="login-pass" value="123456" placeholder="Digite sua senha" class="w-full bg-lightBg border border-borderLight rounded-xl px-4 py-3 text-xs text-textDark font-medium focus:outline-none focus:border-brandGold">
                 </div>
 
-                <p id="login-error-msg" class="text-xs text-red-600 font-semibold hidden text-center">Usuário ou senha incorretos.</p>
+                <p id="login-error-msg" class="text-xs text-red-400 font-semibold hidden text-center">Usuário ou senha incorretos.</p>
 
-                <button onclick="handleLogin()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-brandGreen/20 flex items-center justify-center gap-2">
+                <button onclick="handleLogin()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket text-brandGold"></i> Entrar no Sistema CRM
                 </button>
 
@@ -81,21 +89,20 @@
         <!-- SIDEBAR NAVIGATION -->
         <aside class="w-full md:w-64 bg-cardBg border-r border-borderLight flex flex-col justify-between shrink-0 shadow-sm">
             <div>
-                <!-- Logo Header -->
                 <div class="p-6 border-b border-borderLight flex items-center justify-between">
                     <div>
-                        <h1 class="font-bold text-brandGreen tracking-wider text-sm flex items-center gap-1.5">
+                        <h1 class="font-bold text-textDark tracking-wider text-sm flex items-center gap-1.5">
                             <i class="fa-solid fa-shield-halved text-brandGold"></i> ÓNIX PRÓSPERA
                         </h1>
                         <p class="text-[10px] text-textMuted tracking-widest font-semibold mt-0.5">SOLUÇÕES FINANCEIRAS</p>
                     </div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-brandGold animate-pulse"></div>
+                    <div id="cloud-dot" title="Sincronizado na Nuvem" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
                 </div>
 
                 <!-- User Info -->
                 <div class="p-3 mx-4 my-3 bg-lightBg rounded-xl border border-borderLight flex items-center justify-between">
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div id="user-initials" class="w-10 h-10 rounded-full bg-brandGreen/10 text-brandGreen flex items-center justify-center font-bold text-xs shrink-0">
+                        <div id="user-initials" class="w-10 h-10 rounded-full bg-brandGreen/30 text-brandGold flex items-center justify-center font-bold text-xs shrink-0 border border-brandGreen/50">
                             DE
                         </div>
                         <div class="overflow-hidden">
@@ -103,7 +110,7 @@
                             <p id="logged-user-name" class="text-xs font-bold truncate text-textDark">Diretoria Executiva</p>
                         </div>
                     </div>
-                    <button onclick="logout()" title="Sair do Sistema" class="text-textMuted hover:text-red-600 p-1 text-xs transition">
+                    <button onclick="logout()" title="Sair do Sistema" class="text-textMuted hover:text-red-400 p-1 text-xs transition">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </div>
@@ -111,7 +118,7 @@
                 <!-- Menu Links -->
                 <nav class="px-4 py-2 space-y-1">
                     <p class="px-3 text-[10px] tracking-wider text-textMuted uppercase font-semibold mb-2">Geral</p>
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-brandGreen bg-brandGreen/10 border border-brandGreen/20">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-brandGold bg-brandGreen/20 border border-brandGreen/40">
                         <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
                     </button>
                     <button onclick="switchTab('leads')" id="nav-leads" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
@@ -143,11 +150,11 @@
                 </nav>
             </div>
 
-            <!-- Reset Button -->
-            <div class="p-4 border-t border-borderLight">
-                <button onclick="resetDataPrompt()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs text-red-600 hover:bg-red-50 transition font-medium">
-                    <i class="fa-solid fa-rotate-right"></i> Restaurar Dados
-                </button>
+            <!-- Cloud Status Footer -->
+            <div class="p-4 border-t border-borderLight text-center">
+                <span class="text-[11px] text-emerald-400 font-semibold flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-cloud"></i> Nuvem Ativa (Tempo Real)
+                </span>
             </div>
         </aside>
 
@@ -158,14 +165,14 @@
             <header class="bg-cardBg border-b border-borderLight px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
                 <div class="flex items-center gap-4">
                     <h2 id="current-tab-title" class="text-lg font-bold text-textDark tracking-wide">Dashboard</h2>
-                    <span class="text-xs bg-brandGold/10 text-brandGold border border-brandGold/30 px-2.5 py-1 rounded-full font-semibold">Novembro de 2026</span>
+                    <span class="text-xs bg-brandGold/15 text-brandGold border border-brandGold/30 px-2.5 py-1 rounded-full font-semibold">Novembro de 2026</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button onclick="switchTab('bulk-import')" class="bg-brandGold/10 hover:bg-brandGold/20 text-brandGold border border-brandGold/30 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    <button onclick="switchTab('bulk-import')" class="bg-brandGold/15 hover:bg-brandGold/25 text-brandGold border border-brandGold/30 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
                         <i class="fa-solid fa-file-import"></i> Importar Lista
                     </button>
-                    <button onclick="openNewLeadModal()" class="bg-brandGreen hover:bg-brandGreenHover text-white font-semibold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-md shadow-brandGreen/10">
-                        <i class="fa-solid fa-plus"></i> Novo Lead
+                    <button onclick="openNewLeadModal()" class="bg-brandGreen hover:bg-brandGreenHover text-white font-semibold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-plus text-brandGold"></i> Novo Lead
                     </button>
                 </div>
             </header>
@@ -195,10 +202,10 @@
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
                         <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
                             <span>Total Recebido</span>
-                            <i class="fa-solid fa-wallet text-emerald-600"></i>
+                            <i class="fa-solid fa-wallet text-emerald-400"></i>
                         </div>
                         <div>
-                            <h3 id="dash-recebido" class="text-2xl font-bold text-emerald-600">R$ 300,00</h3>
+                            <h3 id="dash-recebido" class="text-2xl font-bold text-emerald-400">R$ 300,00</h3>
                             <p class="text-xs text-textMuted mt-1">Acumulado no mês</p>
                         </div>
                     </div>
@@ -217,7 +224,7 @@
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
                         <div class="flex justify-between items-center text-textMuted text-xs font-semibold uppercase tracking-wider mb-2">
                             <span>Nº de Vendas</span>
-                            <i class="fa-solid fa-bag-shopping text-brandGreen"></i>
+                            <i class="fa-solid fa-bag-shopping text-emerald-400"></i>
                         </div>
                         <div>
                             <h3 id="dash-num-vendas" class="text-2xl font-bold text-textDark">1</h3>
@@ -229,7 +236,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm col-span-2">
                         <h3 class="text-xs font-bold text-textDark uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-simple text-brandGreen"></i> Resumo de Leads por Status
+                            <i class="fa-solid fa-chart-simple text-brandGold"></i> Resumo de Leads por Status
                         </h3>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
@@ -237,28 +244,28 @@
                                 <h4 id="count-total" class="text-xl font-bold text-textDark mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
-                                <span class="text-[11px] text-blue-600 font-medium">Novos</span>
-                                <h4 id="count-novos" class="text-xl font-bold text-blue-600 mt-1">0</h4>
+                                <span class="text-[11px] text-blue-400 font-medium">Novos</span>
+                                <h4 id="count-novos" class="text-xl font-bold text-blue-400 mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
-                                <span class="text-[11px] text-amber-600 font-medium">Em Contato</span>
-                                <h4 id="count-contato" class="text-xl font-bold text-amber-600 mt-1">0</h4>
+                                <span class="text-[11px] text-amber-400 font-medium">Em Contato</span>
+                                <h4 id="count-contato" class="text-xl font-bold text-amber-400 mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
-                                <span class="text-[11px] text-purple-600 font-medium">Negociando</span>
-                                <h4 id="count-negociando" class="text-xl font-bold text-purple-600 mt-1">0</h4>
+                                <span class="text-[11px] text-purple-400 font-medium">Negociando</span>
+                                <h4 id="count-negociando" class="text-xl font-bold text-purple-400 mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
-                                <span class="text-[11px] text-indigo-600 font-medium">Jurídico ⚖️</span>
-                                <h4 id="count-juridico" class="text-xl font-bold text-indigo-600 mt-1">0</h4>
+                                <span class="text-[11px] text-indigo-400 font-medium">Jurídico ⚖️</span>
+                                <h4 id="count-juridico" class="text-xl font-bold text-indigo-400 mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight">
-                                <span class="text-[11px] text-emerald-600 font-medium">Convertidos</span>
-                                <h4 id="count-convertidos" class="text-xl font-bold text-emerald-600 mt-1">0</h4>
+                                <span class="text-[11px] text-emerald-400 font-medium">Convertidos</span>
+                                <h4 id="count-convertidos" class="text-xl font-bold text-emerald-400 mt-1">0</h4>
                             </div>
                             <div class="bg-lightBg p-4 rounded-xl border border-borderLight col-span-2 sm:col-span-2">
-                                <span class="text-[11px] text-red-600 font-medium">Perdidos</span>
-                                <h4 id="count-perdidos" class="text-xl font-bold text-red-600 mt-1">0</h4>
+                                <span class="text-[11px] text-red-400 font-medium">Perdidos</span>
+                                <h4 id="count-perdidos" class="text-xl font-bold text-red-400 mt-1">0</h4>
                             </div>
                         </div>
                     </div>
@@ -267,9 +274,9 @@
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-xs font-bold text-textDark uppercase tracking-wider flex items-center gap-2">
-                                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Alertas Automáticos
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Alertas Automáticos
                                 </h3>
-                                <span id="alert-count-badge" class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded-full font-bold">0</span>
+                                <span id="alert-count-badge" class="bg-amber-500/20 text-amber-300 text-[11px] px-2 py-0.5 rounded-full font-bold">0</span>
                             </div>
                             <p class="text-xs text-textMuted mb-3">Leads parados há mais de <span id="dash-alert-days-label">3</span> dias sem alteração:</p>
                             
@@ -287,15 +294,15 @@
                 <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
                     <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                         <button onclick="filterLeads('todos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brandGreen text-white transition shadow-sm">Todos</button>
-                        <button onclick="filterLeads('Novos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Novos</button>
-                        <button onclick="filterLeads('Em Contato')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Em Contato</button>
-                        <button onclick="filterLeads('Negociando')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Negociando</button>
-                        <button onclick="filterLeads('Jurídico')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Jurídico</button>
-                        <button onclick="filterLeads('Convertido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Convertido</button>
-                        <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:bg-gray-50 transition">Perdidos</button>
+                        <button onclick="filterLeads('Novos')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Novos</button>
+                        <button onclick="filterLeads('Em Contato')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Em Contato</button>
+                        <button onclick="filterLeads('Negociando')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Negociando</button>
+                        <button onclick="filterLeads('Jurídico')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Jurídico</button>
+                        <button onclick="filterLeads('Convertido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Convertido</button>
+                        <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Perdidos</button>
                     </div>
                     <div class="relative w-full sm:w-64">
-                        <input type="text" id="lead-search-input" oninput="renderLeads()" placeholder="Buscar por nome, processo..." class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark placeholder-textMuted focus:outline-none focus:border-brandGreen">
+                        <input type="text" id="lead-search-input" oninput="renderLeads()" placeholder="Buscar por nome, processo..." class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark placeholder-textMuted focus:outline-none focus:border-brandGold">
                         <i class="fa-solid fa-search absolute right-3.5 top-3 text-textMuted text-xs"></i>
                     </div>
                 </div>
@@ -315,7 +322,7 @@
             <!-- VIEW: JURÍDICO -->
             <section id="tab-juridico" class="tab-content hidden p-6 space-y-6">
                 <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-sm text-textDark mb-1"><i class="fa-solid fa-scale-balanced text-indigo-600 mr-2"></i> Setor Jurídico</h3>
+                    <h3 class="font-bold text-sm text-textDark mb-1"><i class="fa-solid fa-scale-balanced text-indigo-400 mr-2"></i> Setor Jurídico</h3>
                     <p class="text-xs text-textMuted">Leads que concluíram a negociação comercial e estão em análise processual jurídica.</p>
                 </div>
                 <div id="juridico-list-container" class="space-y-3"></div>
@@ -328,20 +335,20 @@
                         <h3 class="font-bold text-sm text-textDark flex items-center gap-2">
                             <i class="fa-solid fa-file-import text-brandGold"></i> Importador Inteligente de Leads em Lote
                         </h3>
-                        <span class="text-xs bg-brandGreen/10 text-brandGreen font-semibold px-2.5 py-1 rounded-full">Automático</span>
+                        <span class="text-xs bg-brandGreen/30 text-emerald-400 border border-brandGreen/50 font-semibold px-2.5 py-1 rounded-full">Sincroniza com a Equipe</span>
                     </div>
 
                     <p class="text-xs text-textMuted">
-                        Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente.
+                        Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente e salvar na nuvem.
                     </p>
 
-                    <textarea id="bulk-import-textarea" oninput="processBulkText()" placeholder="Cole sua lista aqui, por exemplo:&#10;&#10;MARIA LUCINDA NASCIMENTO SILVA&#10;4006679-23.2026.8.26.0038&#10;(65) 99921-2621" class="w-full h-48 bg-lightBg border border-borderLight rounded-xl p-4 text-xs font-mono text-textDark focus:outline-none focus:border-brandGreen resize-none"></textarea>
+                    <textarea id="bulk-import-textarea" oninput="processBulkText()" placeholder="Cole sua lista aqui, por exemplo:&#10;&#10;MARIA LUCINDA NASCIMENTO SILVA&#10;4006679-23.2026.8.26.0038&#10;(65) 99921-2621" class="w-full h-48 bg-lightBg border border-borderLight rounded-xl p-4 text-xs font-mono text-textDark focus:outline-none focus:border-brandGold resize-none"></textarea>
 
                     <div class="border-t border-borderLight pt-4">
                         <div class="flex items-center justify-between mb-3">
                             <h4 class="text-xs font-bold text-textDark uppercase tracking-wider">Leads Reconhecidos (<span id="bulk-count">0</span>)</h4>
-                            <button id="btn-import-all" onclick="confirmBulkImport()" disabled class="bg-brandGreen hover:bg-brandGreenHover disabled:bg-gray-300 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-2">
-                                <i class="fa-solid fa-check"></i> Importar Todos para "Novos Leads"
+                            <button id="btn-import-all" onclick="confirmBulkImport()" disabled class="bg-brandGreen hover:bg-brandGreenHover disabled:bg-zinc-800 disabled:text-zinc-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-2">
+                                <i class="fa-solid fa-check text-brandGold"></i> Importar Todos para "Novos Leads"
                             </button>
                         </div>
                         <div id="bulk-preview-container" class="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -356,10 +363,10 @@
                 <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-sm text-textDark">Contratos e Vendas Fechadas</h3>
-                        <p class="text-xs text-textMuted">Acompanhamento financeiro de parcelas, entradas e comprovantes.</p>
+                        <p class="text-xs text-textMuted">Acompanhamento financeiro compartilhado com a diretoria.</p>
                     </div>
                     <button onclick="switchTab('simulator')" class="bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-calculator"></i> Nova Proposta / Simulador
+                        <i class="fa-solid fa-calculator text-brandGold"></i> Nova Proposta / Simulador
                     </button>
                 </div>
 
@@ -387,36 +394,36 @@
             <section id="tab-simulator" class="tab-content hidden p-6 space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
-                        <h3 class="font-bold text-xs uppercase tracking-wider text-brandGreen flex items-center gap-2 border-b border-borderLight pb-3">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-textDark flex items-center gap-2 border-b border-borderLight pb-3">
                             <i class="fa-solid fa-calculator text-brandGold"></i> Simulador & Proposta de Negociação
                         </h3>
 
                         <div class="space-y-3">
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Nome do Cliente</label>
-                                <input type="text" id="sim-client-name" placeholder="Ex: Carlos Eduardo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                <input type="text" id="sim-client-name" placeholder="Ex: Carlos Eduardo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-medium text-textMuted mb-1">CPF / Identificação</label>
-                                    <input type="text" id="sim-client-cpf" placeholder="000.000.000-00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                    <input type="text" id="sim-client-cpf" placeholder="000.000.000-00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-textMuted mb-1">Banco / Órgão</label>
-                                    <input type="text" id="sim-bank" placeholder="Ex: Banco Itaú" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                    <input type="text" id="sim-bank" placeholder="Ex: Banco Itaú" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                             </div>
 
                             <div class="border-t border-borderLight pt-3">
-                                <label class="block text-xs font-medium text-brandGreen mb-2">Dados de Financiamento</label>
+                                <label class="block text-xs font-medium text-brandGold mb-2">Dados de Financiamento</label>
                                 <div class="grid grid-cols-2 gap-3 mb-3">
                                     <div>
                                         <label class="block text-[11px] text-textMuted mb-1">Valor Atual da Parcela (R$)</label>
-                                        <input type="number" id="sim-parcel-value" oninput="calculateSimulation()" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                        <input type="number" id="sim-parcel-value" oninput="calculateSimulation()" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     </div>
                                     <div>
                                         <label class="block text-[11px] text-textMuted mb-1">Qtd de Parcelas Restantes</label>
-                                        <input type="number" id="sim-parcels-total" oninput="calculateSimulation()" placeholder="0" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                        <input type="number" id="sim-parcels-total" oninput="calculateSimulation()" placeholder="0" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     </div>
                                 </div>
 
@@ -435,7 +442,7 @@
                         <div>
                             <h3 class="font-bold text-xs uppercase tracking-wider text-textDark mb-4 border-b border-borderLight pb-3 flex items-center justify-between">
                                 <span>Resultado da Simulação</span>
-                                <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">Pronto para Envio</span>
+                                <span class="text-[11px] text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold">Pronto para Envio</span>
                             </h3>
 
                             <div class="space-y-4 bg-lightBg p-4 rounded-xl border border-borderLight">
@@ -449,16 +456,16 @@
                                 </div>
                                 <div class="border-t border-borderLight pt-3 flex justify-between items-center">
                                     <span class="text-sm font-semibold text-textDark">Novo Valor da Dívida:</span>
-                                    <span id="res-final" class="text-xl font-extrabold text-emerald-600">R$ 0,00</span>
+                                    <span id="res-final" class="text-xl font-extrabold text-emerald-400">R$ 0,00</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-3 mt-6">
-                            <button onclick="copyProposalText()" class="w-full bg-lightBg hover:bg-gray-50 border border-borderLight text-brandGold text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                            <button onclick="copyProposalText()" class="w-full bg-lightBg hover:bg-zinc-900 border border-borderLight text-brandGold text-xs font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-copy"></i> Copiar Proposta para WhatsApp
                             </button>
-                            <button onclick="saveSimulationAsSale()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-brandGreen/10">
+                            <button onclick="saveSimulationAsSale()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md">
                                 <i class="fa-solid fa-check-circle text-brandGold"></i> Efetivar Negócio / Gerar Venda
                             </button>
                         </div>
@@ -469,11 +476,11 @@
             <!-- VIEW 6: RANKING -->
             <section id="tab-ranking" class="tab-content hidden p-6 space-y-6">
                 <div class="bg-cardBg border border-borderLight p-6 rounded-2xl shadow-sm text-center max-w-md mx-auto space-y-4">
-                    <div class="w-16 h-16 rounded-full bg-brandGold/10 text-brandGold flex items-center justify-center mx-auto text-2xl font-bold">
+                    <div class="w-16 h-16 rounded-full bg-brandGold/15 text-brandGold flex items-center justify-center mx-auto text-2xl font-bold border border-brandGold/30">
                         <i class="fa-solid fa-trophy"></i>
                     </div>
                     <h3 class="font-bold text-base text-textDark">Ranking de Vendedores</h3>
-                    <p class="text-xs text-textMuted">Você está atualmente na <strong class="text-brandGreen">1ª posição</strong> da equipe Ónix Próspera neste mês.</p>
+                    <p class="text-xs text-textMuted">Você está atualmente na <strong class="text-brandGold">1ª posição</strong> da equipe Ónix Próspera neste mês.</p>
                 </div>
             </section>
 
@@ -489,19 +496,19 @@
                         <div class="space-y-3">
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Nome do Colaborador</label>
-                                <input type="text" id="admin-new-name" placeholder="Ex: Maria Silva" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                <input type="text" id="admin-new-name" placeholder="Ex: Maria Silva" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">E-mail / Usuário de Login</label>
-                                <input type="text" id="admin-new-email" placeholder="maria@onix.com" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                <input type="text" id="admin-new-email" placeholder="maria@onix.com" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Senha</label>
-                                <input type="text" id="admin-new-pass" placeholder="Senha de acesso" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                <input type="text" id="admin-new-pass" placeholder="Senha de acesso" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-textMuted mb-1">Perfil de Acesso</label>
-                                <select id="admin-new-role" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                                <select id="admin-new-role" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     <option value="comercial">💼 Comercial (Atendimento / Leads)</option>
                                     <option value="juridico">⚖️ Jurídico (Processos Pós-Negociação)</option>
                                     <option value="admin">⚙️ Administrador</option>
@@ -509,7 +516,7 @@
                                 </select>
                             </div>
                             <button onclick="createNewUser()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white font-bold py-2.5 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-plus"></i> Cadastrar Usuário
+                                <i class="fa-solid fa-plus text-brandGold"></i> Cadastrar Usuário na Nuvem
                             </button>
                         </div>
 
@@ -517,7 +524,7 @@
                             <label class="block text-xs font-bold text-textDark">Regra de Alerta de Lead Parado (Dias):</label>
                             <div class="flex gap-2">
                                 <input type="number" id="admin-alert-days" min="1" max="30" value="3" class="w-20 bg-lightBg border border-borderLight rounded-xl px-3 py-1.5 text-xs text-textDark font-bold">
-                                <button onclick="saveAlertDays()" class="bg-brandGold text-white px-3 py-1.5 rounded-xl text-xs font-semibold hover:opacity-90">Salvar Prazo</button>
+                                <button onclick="saveAlertDays()" class="bg-brandGold text-black px-3 py-1.5 rounded-xl text-xs font-bold hover:opacity-90">Salvar Prazo</button>
                             </div>
                         </div>
                     </div>
@@ -525,7 +532,7 @@
                     <!-- Lista de Logins Ativos -->
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm lg:col-span-2 space-y-4">
                         <h3 class="font-bold text-sm text-textDark border-b border-borderLight pb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-users-gear text-brandGreen"></i> Logins Cadastrados no Sistema
+                            <i class="fa-solid fa-users-gear text-brandGold"></i> Logins Sincronizados na Nuvem
                         </h3>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
@@ -549,7 +556,7 @@
     </div>
 
     <!-- MODAL: NEW LEAD -->
-    <div id="lead-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div id="lead-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-cardBg border border-borderLight rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="p-5 border-b border-borderLight flex justify-between items-center">
                 <h3 class="font-bold text-sm text-textDark">Novo Lead / Contato</h3>
@@ -558,22 +565,22 @@
             <div class="p-5 space-y-4">
                 <div>
                     <label class="block text-xs font-medium text-textMuted mb-1">Nome do Cliente</label>
-                    <input type="text" id="modal-name" placeholder="Nome completo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                    <input type="text" id="modal-name" placeholder="Nome completo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-textMuted mb-1">WhatsApp / Telefone</label>
-                        <input type="text" id="modal-phone" placeholder="(11) 99999-9999" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                        <input type="text" id="modal-phone" placeholder="(11) 99999-9999" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-textMuted mb-1">Nº Processo / CPF</label>
-                        <input type="text" id="modal-process" placeholder="Nº do processo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                        <input type="text" id="modal-process" placeholder="Nº do processo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-textMuted mb-1">Status Inicial</label>
-                        <select id="modal-status" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                        <select id="modal-status" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             <option value="Novos">Novos</option>
                             <option value="Em Contato">Em Contato</option>
                             <option value="Negociando">Negociando</option>
@@ -584,7 +591,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-textMuted mb-1">Data Última Interação</label>
-                        <input type="date" id="modal-last-contact" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGreen">
+                        <input type="date" id="modal-last-contact" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                     </div>
                 </div>
             </div>
@@ -596,18 +603,31 @@
     </div>
 
     <!-- NOTIFICATION TOAST -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-cardBg border border-brandGold/50 text-textDark px-4 py-3 rounded-2xl shadow-2xl hidden z-50 flex items-center gap-3">
+    <div id="toast" class="fixed bottom-5 right-5 bg-cardBg border border-brandGold text-textDark px-4 py-3 rounded-2xl shadow-2xl hidden z-50 flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-brandGold text-base"></i>
-        <span id="toast-message" class="text-xs font-semibold">Ação realizada com sucesso!</span>
+        <span id="toast-message" class="text-xs font-semibold">Sincronizado com a nuvem!</span>
     </div>
 
-    <!-- SCRIPT DE CONTROLE -->
+    <!-- SCRIPT DE CONTROLE + FIREBASE REALTIME DATABASE -->
     <script>
-        const STORAGE_KEY = "onix_prospera_master_crm_v2";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZ8gBmwPOTCRK7L7K8eXUWivo_m-UxibY",
+            authDomain: "crm-onix-prospera.firebaseapp.com",
+            databaseURL: "https://crm-onix-prospera-default-rtdb.firebaseio.com",
+            projectId: "crm-onix-prospera",
+            storageBucket: "crm-onix-prospera.firebasestorage.app",
+            messagingSenderId: "757389442118",
+            appId: "1:757389442118:web:73364bccfc21bddf2fde47",
+            measurementId: "G-XFTX1C2WV1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const crmRef = db.ref('onix_crm_data');
 
         let defaultData = {
-            currentUser: null,
             alertDays: 3,
+            metaMonthly: 10000.00,
             users: [
                 { id: 1, name: "Diretoria Executiva", email: "dono@onix.com", pass: "123456", role: "dono" },
                 { id: 2, name: "Administração TI", email: "admin@onix.com", pass: "123456", role: "admin" },
@@ -616,34 +636,62 @@
             ],
             leads: [
                 { id: 1, name: "Thiago Gualberto Caju", phone: "(19) 99907-0501", process: "4020058-79.2026.8.26.0477", status: "Em Contato", lastContact: "2026-10-10", notes: "" },
-                { id: 2, name: "Elaine de Barros Martiniano", phone: "(19) 98985-0480", process: "4020352-04.2026.8.26.0477", status: "Negociando", lastContact: "2026-10-12", notes: "" },
-                { id: 3, name: "Gabriel Meitestainer Picaglie", phone: "(19) 99907-6774", process: "400149-11.2026.8.26.0435", status: "Novos", lastContact: "2026-11-10", notes: "" },
-                { id: 4, name: "João Francisco da Silva", phone: "(19) 98986-6006", process: "4037896-18.2026.8.26.0001", status: "Novos", lastContact: "2026-11-01", notes: "" }
+                { id: 2, name: "Elaine de Barros Martiniano", phone: "(19) 98985-0480", process: "4020352-04.2026.8.26.0477", status: "Negociando", lastContact: "2026-10-12", notes: "" }
             ],
             sales: [
                 { id: 1, date: "2026-11-08", client: "Thiago Lima Siqueira", process: "4020058-79.2026.8.26.077", service: "Revisional de Financiamento", totalVal: 300.00, receivedVal: 300.00, status: "Aprovado" }
-            ],
-            metaMonthly: 10000.00
+            ]
         };
 
-        let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
-        if (!appData.users) appData.users = defaultData.users;
-        if (!appData.alertDays) appData.alertDays = 3;
+        let appData = JSON.parse(JSON.stringify(defaultData));
+        let currentUser = null;
         let parsedBulkLeads = [];
+        let activeTab = 'dashboard';
 
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-        }
-
-        function resetDataPrompt() {
-            if (confirm("Deseja restaurar os dados iniciais do sistema?")) {
-                appData = JSON.parse(JSON.stringify(defaultData));
-                saveToStorage();
-                location.reload();
+        // Listener em Tempo Real do Firebase
+        crmRef.on('value', (snapshot) => {
+            const val = snapshot.val();
+            const statusEl = document.getElementById('cloud-status-login');
+            if (statusEl) {
+                statusEl.className = "inline-flex items-center gap-1.5 text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-semibold";
+                statusEl.innerHTML = `<i class="fa-solid fa-cloud-check"></i> Banco na nuvem conectado`;
             }
+
+            if (val) {
+                appData.alertDays = val.alertDays || 3;
+                appData.metaMonthly = val.metaMonthly || 10000.00;
+                appData.users = val.users ? Object.values(val.users) : defaultData.users;
+                appData.leads = val.leads ? Object.values(val.leads) : [];
+                appData.sales = val.sales ? Object.values(val.sales) : [];
+            } else {
+                // Primeira vez: popula o banco no Firebase
+                saveToCloud();
+            }
+
+            if (currentUser) {
+                refreshActiveView();
+            }
+        });
+
+        function saveToCloud() {
+            crmRef.set({
+                alertDays: appData.alertDays,
+                metaMonthly: appData.metaMonthly,
+                users: appData.users,
+                leads: appData.leads,
+                sales: appData.sales
+            });
         }
 
-        /* AUTENTICAÇÃO REAL BASEADA NOS USUÁRIOS CADASTRADOS */
+        function refreshActiveView() {
+            if(activeTab === 'dashboard') updateDashboard();
+            if(activeTab === 'leads') renderLeads();
+            if(activeTab === 'negotiating') renderNegotiating();
+            if(activeTab === 'juridico') renderJuridico();
+            if(activeTab === 'sales') renderSalesTable();
+            if(activeTab === 'admin') renderAdminUsers();
+        }
+
         function handleLogin() {
             const emailInput = document.getElementById('login-user').value.trim().toLowerCase();
             const passInput = document.getElementById('login-pass').value.trim();
@@ -657,8 +705,7 @@
             }
 
             errEl.classList.add('hidden');
-            appData.currentUser = foundUser;
-            saveToStorage();
+            currentUser = foundUser;
 
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
@@ -674,7 +721,6 @@
             document.getElementById('logged-user-name').innerText = foundUser.name;
             document.getElementById('user-initials').innerText = foundUser.name.substring(0, 2).toUpperCase();
 
-            // Permissões de Menu por Perfil
             if (foundUser.role === 'dono' || foundUser.role === 'admin') {
                 document.getElementById('nav-admin').classList.remove('hidden');
             } else {
@@ -691,13 +737,11 @@
         }
 
         function logout() {
-            appData.currentUser = null;
-            saveToStorage();
+            currentUser = null;
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
         }
 
-        /* GERENCIADOR DE USUÁRIOS (PAINEL ADMIN) */
         function renderAdminUsers() {
             const tbody = document.getElementById('admin-users-tbody');
             document.getElementById('admin-alert-days').value = appData.alertDays || 3;
@@ -712,13 +756,13 @@
 
             appData.users.forEach(u => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-zinc-900/60">
                         <td class="p-3 font-bold text-textDark">${u.name}</td>
                         <td class="p-3 text-textMuted">${u.email}</td>
                         <td class="p-3 font-mono text-textMuted">${u.pass}</td>
-                        <td class="p-3"><span class="bg-brandGreen/10 text-brandGreen px-2 py-0.5 rounded-full font-semibold">${roleLabels[u.role] || u.role}</span></td>
+                        <td class="p-3"><span class="bg-brandGreen/30 text-emerald-400 border border-brandGreen/50 px-2 py-0.5 rounded-full font-semibold">${roleLabels[u.role] || u.role}</span></td>
                         <td class="p-3 text-right">
-                            ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-600 hover:underline font-semibold">Remover</button>` : '<span class="text-textMuted text-[10px]">Principal</span>'}
+                            ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-400 hover:underline font-semibold">Remover</button>` : '<span class="text-textMuted text-[10px]">Principal</span>'}
                         </td>
                     </tr>
                 `;
@@ -741,27 +785,19 @@
                 return;
             }
 
-            appData.users.push({
-                id: Date.now(),
-                name,
-                email,
-                pass,
-                role
-            });
+            appData.users.push({ id: Date.now(), name, email, pass, role });
+            saveToCloud();
 
-            saveToStorage();
             document.getElementById('admin-new-name').value = '';
             document.getElementById('admin-new-email').value = '';
             document.getElementById('admin-new-pass').value = '';
-            renderAdminUsers();
-            showToast(`Login criado para ${name}!`);
+            showToast(`Login de ${name} salvo na nuvem!`);
         }
 
         function deleteUser(id) {
-            if (confirm("Remover este acesso?")) {
+            if (confirm("Remover este acesso da equipe?")) {
                 appData.users = appData.users.filter(u => u.id !== id);
-                saveToStorage();
-                renderAdminUsers();
+                saveToCloud();
                 showToast("Usuário removido.");
             }
         }
@@ -769,23 +805,23 @@
         function saveAlertDays() {
             const days = parseInt(document.getElementById('admin-alert-days').value) || 3;
             appData.alertDays = days;
-            saveToStorage();
-            updateDashboard();
-            showToast(`Alerta configurado para ${days} dia(s) de inatividade!`);
+            saveToCloud();
+            showToast(`Alerta atualizado para ${days} dia(s)!`);
         }
 
         function switchTab(tabId) {
+            activeTab = tabId;
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-brandGreen', 'bg-brandGreen/10', 'border', 'border-brandGreen/20');
+                btn.classList.remove('text-brandGold', 'bg-brandGreen/20', 'border', 'border-brandGreen/40');
                 btn.classList.add('text-textMuted');
             });
 
             const activeBtn = document.getElementById(`nav-${tabId}`);
             if(activeBtn) {
-                activeBtn.classList.add('text-brandGreen', 'bg-brandGreen/10', 'border', 'border-brandGreen/20');
+                activeBtn.classList.add('text-brandGold', 'bg-brandGreen/20', 'border', 'border-brandGreen/40');
                 activeBtn.classList.remove('text-textMuted');
             }
 
@@ -801,20 +837,14 @@
                 admin: 'Painel Admin & Logins'
             };
             document.getElementById('current-tab-title').innerText = titles[tabId] || 'CRM';
-
-            if(tabId === 'dashboard') updateDashboard();
-            if(tabId === 'leads') renderLeads();
-            if(tabId === 'negotiating') renderNegotiating();
-            if(tabId === 'juridico') renderJuridico();
-            if(tabId === 'sales') renderSalesTable();
-            if(tabId === 'admin') renderAdminUsers();
+            refreshActiveView();
         }
 
         function checkInactivityAlerts() {
             const today = new Date();
             const limitDays = appData.alertDays || 3;
             let alerts = [];
-            const role = appData.currentUser ? appData.currentUser.role : 'dono';
+            const role = currentUser ? currentUser.role : 'dono';
 
             appData.leads.forEach(lead => {
                 if (role === 'comercial' && (lead.status === 'Jurídico' || lead.status === 'Convertido')) return;
@@ -837,7 +867,7 @@
         }
 
         function updateDashboard() {
-            const role = appData.currentUser ? appData.currentUser.role : 'dono';
+            const role = currentUser ? currentUser.role : 'dono';
             let leadsVisiveis = appData.leads;
             if (role === 'comercial') {
                 leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
@@ -871,12 +901,12 @@
             container.innerHTML = alerts.length === 0 ? `<p class="text-xs text-textMuted italic py-2">Nenhum alerta pendente.</p>` : '';
             alerts.forEach(alert => {
                 container.innerHTML += `
-                    <div class="bg-lightBg p-2.5 rounded-xl border border-amber-200 flex items-center justify-between text-xs">
+                    <div class="bg-lightBg p-2.5 rounded-xl border border-amber-500/30 flex items-center justify-between text-xs">
                         <div>
                             <span class="font-bold text-textDark block">${alert.name}</span>
-                            <span class="text-[10px] text-amber-700 font-medium">Frio / Inativo há ${alert.daysInactive} dias</span>
+                            <span class="text-[10px] text-amber-400 font-medium">Frio / Inativo há ${alert.daysInactive} dias</span>
                         </div>
-                        <button onclick="openWhatsApp('${alert.phone}', '${alert.name}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold">Chamar</button>
+                        <button onclick="openWhatsApp('${alert.phone}', '${alert.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-semibold">Chamar</button>
                     </div>
                 `;
             });
@@ -893,7 +923,7 @@
             const search = document.getElementById('lead-search-input').value.toLowerCase();
             container.innerHTML = '';
 
-            const role = appData.currentUser ? appData.currentUser.role : 'dono';
+            const role = currentUser ? currentUser.role : 'dono';
             let leadsVisiveis = appData.leads;
             if (role === 'comercial') {
                 leadsVisiveis = appData.leads.filter(l => l.status !== 'Jurídico');
@@ -920,10 +950,10 @@
                             <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
                                 <i class="fa-brands fa-whatsapp"></i> WhatsApp
                             </button>
-                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGreen">
+                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGold">
                                 <option value="Novos" ${lead.status==='Novos'?'selected':''}>Novos</option>
                                 <option value="Em Contato" ${lead.status==='Em Contato'?'selected':''}>Em Contato</option>
                                 <option value="Negociando" ${lead.status==='Negociando'?'selected':''}>Negociando</option>
@@ -953,8 +983,8 @@
                             <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="updateLeadStatus(${lead.id}, 'Jurídico')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Enviar para Jurídico ⚖️</button>
-                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
+                            <button onclick="updateLeadStatus(${lead.id}, 'Jurídico')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Enviar para Jurídico ⚖️</button>
+                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
                         </div>
                     </div>
                 `;
@@ -971,14 +1001,14 @@
             }
             jur.forEach(lead => {
                 container.innerHTML += `
-                    <div class="bg-cardBg border border-indigo-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div class="bg-cardBg border border-indigo-500/30 p-4 rounded-2xl shadow-sm flex justify-between items-center">
                         <div>
-                            <span class="text-[10px] font-bold text-indigo-600 uppercase">Em Análise Processual</span>
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase">Em Análise Processual</span>
                             <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
                             <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="updateLeadStatus(${lead.id}, 'Convertido')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Finalizar / Fechar Venda</button>
+                            <button onclick="updateLeadStatus(${lead.id}, 'Convertido')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Finalizar / Fechar Venda</button>
                         </div>
                     </div>
                 `;
@@ -1025,7 +1055,7 @@
 
                 if (name) {
                     parsedBulkLeads.push({
-                        id: Date.now() + Math.random(),
+                        id: Date.now() + Math.floor(Math.random() * 10000),
                         name: name,
                         phone: phones.length > 0 ? phones.join(' / ') : 'Sem telefone',
                         process: processNumber || 'N/A',
@@ -1047,7 +1077,7 @@
                             <span class="font-bold text-textDark block">${item.name}</span>
                             <span class="text-textMuted text-[11px]">Proc: ${item.process} | Tel: ${item.phone}</span>
                         </div>
-                        <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full">Novo</span>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 font-bold px-2 py-0.5 rounded-full">Novo</span>
                     </div>
                 `;
             });
@@ -1056,11 +1086,10 @@
         function confirmBulkImport() {
             if (parsedBulkLeads.length === 0) return;
             appData.leads.unshift(...parsedBulkLeads);
-            saveToStorage();
-            showToast(`${parsedBulkLeads.length} leads importados com sucesso!`);
+            saveToCloud();
+            showToast(`${parsedBulkLeads.length} leads enviados para a nuvem!`);
             document.getElementById('bulk-import-textarea').value = '';
             processBulkText();
-            updateDashboard();
             switchTab('leads');
         }
 
@@ -1069,12 +1098,8 @@
             if(lead) {
                 lead.status = newStatus;
                 lead.lastContact = new Date().toISOString().split('T')[0];
-                saveToStorage();
-                showToast(`Status atualizado para ${newStatus}`);
-                updateDashboard();
-                renderLeads();
-                renderNegotiating();
-                renderJuridico();
+                saveToCloud();
+                showToast(`Status atualizado para ${newStatus} na nuvem!`);
             }
         }
 
@@ -1111,11 +1136,9 @@
                 lastContact: document.getElementById('modal-last-contact').value,
                 notes: ''
             });
-            saveToStorage();
+            saveToCloud();
             closeLeadModal();
-            renderLeads();
-            updateDashboard();
-            showToast("Lead cadastrado com sucesso!");
+            showToast("Lead salvo na nuvem para toda a equipe!");
         }
 
         function calculateSimulation() {
@@ -1147,8 +1170,8 @@
                 receivedVal: 300,
                 status: 'Aprovado'
             });
-            saveToStorage();
-            showToast("Venda gerada com sucesso!");
+            saveToCloud();
+            showToast("Venda registrada na nuvem!");
             switchTab('sales');
         }
 
@@ -1157,14 +1180,14 @@
             tbody.innerHTML = '';
             appData.sales.forEach(s => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-zinc-900/60">
                         <td class="p-3.5">${s.date}</td>
                         <td class="p-3.5 font-bold">${s.client}</td>
                         <td class="p-3.5">${s.process}</td>
                         <td class="p-3.5">${s.service}</td>
                         <td class="p-3.5">R$ ${s.totalVal.toFixed(2)}</td>
-                        <td class="p-3.5 text-emerald-600">R$ ${s.receivedVal.toFixed(2)}</td>
-                        <td class="p-3.5"><span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold">${s.status}</span></td>
+                        <td class="p-3.5 text-emerald-400">R$ ${s.receivedVal.toFixed(2)}</td>
+                        <td class="p-3.5"><span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">${s.status}</span></td>
                     </tr>
                 `;
             });
