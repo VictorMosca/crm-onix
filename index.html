@@ -126,7 +126,7 @@
                         <i class="fa-solid fa-scale-balanced w-5 text-center"></i> Jurídico
                     </button>
                     <button onclick="switchTab('sales')" id="nav-sales" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
-                        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Minhas Vendas
+                        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Minhas Vendas & Financeiro
                     </button>
 
                     <p class="px-3 pt-4 text-[10px] tracking-wider text-textMuted uppercase font-semibold mb-2">Ferramentas</p>
@@ -134,7 +134,7 @@
                         <i class="fa-solid fa-file-import w-5 text-center"></i> Importar Lote
                     </button>
                     <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
-                        <i class="fa-solid fa-calculator w-5 text-center"></i> Simulador
+                        <i class="fa-solid fa-calculator w-5 text-center"></i> Simulador & Venda
                     </button>
                     <button onclick="switchTab('ranking')" id="nav-ranking" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
                         <i class="fa-solid fa-trophy w-5 text-center"></i> Ranking
@@ -174,6 +174,22 @@
 
             <!-- VIEW 1: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content p-6 space-y-6">
+                <!-- Alerta Financeiro Global (Visível apenas para Dono e Admin) -->
+                <div id="financial-alert-banner" class="hidden bg-amber-500/10 border border-amber-500/40 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg font-bold shrink-0">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider">Radar Financeiro de Vencimentos</h4>
+                            <p id="financial-alert-text" class="text-xs text-textDark mt-0.5">Verificando boletos e parcelas do dia...</p>
+                        </div>
+                    </div>
+                    <button onclick="switchTab('sales')" class="bg-amber-500 hover:bg-amber-600 text-black font-bold px-3.5 py-2 rounded-xl text-xs transition">
+                        Verificar Financeiro
+                    </button>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm flex flex-col justify-between">
                         <div>
@@ -298,7 +314,6 @@
                             <button onclick="filterLeads('Perdido')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-lightBg text-textMuted border border-borderLight hover:text-textDark transition">Perdidos</button>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                            <!-- Filtro por Vendedor (Visível apenas para Dono e Admin) -->
                             <div id="admin-seller-filter-wrapper" class="hidden">
                                 <select id="lead-seller-filter" onchange="renderLeads()" class="w-full sm:w-48 bg-lightBg border border-brandGold/40 rounded-xl px-3 py-2 text-xs text-brandGold font-semibold focus:outline-none">
                                     <option value="todos">👥 Todos os Vendedores</option>
@@ -348,7 +363,6 @@
                         Cole o bloco de texto bruto recebido. O CRM irá extrair automaticamente o <strong>Nome</strong>, o <strong>Número do Processo</strong> e os <strong>Telefones</strong> de cada cliente.
                     </p>
 
-                    <!-- Seletor de Destinatário na Importação (Para Dono e Admin) -->
                     <div id="bulk-assign-wrapper" class="hidden bg-lightBg border border-brandGold/30 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                             <label class="block text-xs font-bold text-brandGold"><i class="fa-solid fa-user-tag mr-1"></i> Direcionar este lote para qual Comercial?</label>
@@ -375,15 +389,15 @@
                 </div>
             </section>
 
-            <!-- VIEW 4: MINHAS VENDAS -->
+            <!-- VIEW 4: MINHAS VENDAS & FINANCEIRO -->
             <section id="tab-sales" class="tab-content hidden p-6 space-y-6">
-                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h3 class="font-bold text-sm text-textDark">Contratos e Vendas Fechadas</h3>
-                        <p class="text-xs text-textMuted">Acompanhamento financeiro das vendas realizadas.</p>
+                        <h3 class="font-bold text-sm text-textDark">Contratos, Formas de Pagamento & Financeiro</h3>
+                        <p class="text-xs text-textMuted">Acompanhamento de entradas, parcelamentos (Boleto/Cartão) e status de cobrança.</p>
                     </div>
-                    <button onclick="switchTab('simulator')" class="bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-calculator text-brandGold"></i> Nova Proposta / Simulador
+                    <button onclick="switchTab('simulator')" class="bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 shadow-sm shrink-0">
+                        <i class="fa-solid fa-calculator text-brandGold"></i> Nova Proposta / Fechar Venda
                     </button>
                 </div>
 
@@ -392,13 +406,14 @@
                         <table class="w-full text-left text-xs">
                             <thead class="bg-lightBg text-textMuted border-b border-borderLight uppercase tracking-wider font-semibold">
                                 <tr>
-                                    <th class="p-3.5">Data</th>
+                                    <th class="p-3.5">Data / Venc.</th>
                                     <th class="p-3.5">Cliente</th>
-                                    <th class="p-3.5">Responsável</th>
-                                    <th class="p-3.5">Processo</th>
+                                    <th class="p-3.5">Comercial</th>
+                                    <th class="p-3.5">Forma / Pagamento</th>
                                     <th class="p-3.5">Valor Total</th>
-                                    <th class="p-3.5">Recebido</th>
-                                    <th class="p-3.5">Status</th>
+                                    <th class="p-3.5">Entrada / Recebido</th>
+                                    <th class="p-3.5">Status Financeiro</th>
+                                    <th class="p-3.5 text-right">Ação</th>
                                 </tr>
                             </thead>
                             <tbody id="sales-table-body" class="divide-y divide-borderLight"></tbody>
@@ -407,12 +422,12 @@
                 </div>
             </section>
 
-            <!-- VIEW 5: SIMULADOR -->
+            <!-- VIEW 5: SIMULADOR & FECHAMENTO COMERCIAL -->
             <section id="tab-simulator" class="tab-content hidden p-6 space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
                         <h3 class="font-bold text-xs uppercase tracking-wider text-textDark flex items-center gap-2 border-b border-borderLight pb-3">
-                            <i class="fa-solid fa-calculator text-brandGold"></i> Simulador & Proposta de Negociação
+                            <i class="fa-solid fa-calculator text-brandGold"></i> Simulador & Condição de Pagamento
                         </h3>
 
                         <div class="space-y-3">
@@ -426,21 +441,42 @@
                                     <input type="text" id="sim-client-cpf" placeholder="000.000.000-00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-textMuted mb-1">Valor do Contrato / Honorários (R$)</label>
+                                    <label class="block text-xs font-medium text-textMuted mb-1">Honorários / Valor Total (R$)</label>
                                     <input type="number" id="sim-contract-fee" value="300" placeholder="300.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                 </div>
                             </div>
 
+                            <!-- OPÇÕES DE PAGAMENTO (SOLICITADO) -->
+                            <div class="border-t border-borderLight pt-3 space-y-3">
+                                <label class="block text-xs font-bold text-brandGold">Forma de Pagamento Acertada</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button type="button" onclick="setPaymentMode('pix')" id="pay-mode-pix" class="pay-mode-btn bg-brandGreen/30 border border-brandGreen text-emerald-300 font-semibold py-2 rounded-xl text-xs transition">À Vista (PIX)</button>
+                                    <button type="button" onclick="setPaymentMode('cartao')" id="pay-mode-cartao" class="pay-mode-btn bg-lightBg border border-borderLight text-textMuted font-semibold py-2 rounded-xl text-xs transition">Cartão Crédito</button>
+                                    <button type="button" onclick="setPaymentMode('boleto')" id="pay-mode-boleto" class="pay-mode-btn bg-lightBg border border-borderLight text-textMuted font-semibold py-2 rounded-xl text-xs transition">Boleto / Carnê</button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3 pt-1">
+                                    <div>
+                                        <label class="block text-[11px] text-textMuted mb-1">Valor da Entrada (R$)</label>
+                                        <input type="number" id="sim-entry-value" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-textMuted mb-1">Data de Vencimento / Entrada</label>
+                                        <input type="date" id="sim-due-date" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="border-t border-borderLight pt-3">
-                                <label class="block text-xs font-medium text-brandGold mb-2">Dados de Financiamento</label>
+                                <label class="block text-xs font-medium text-brandGold mb-2">Simulação de Parcelas do Financiamento</label>
                                 <div class="grid grid-cols-2 gap-3 mb-3">
                                     <div>
                                         <label class="block text-[11px] text-textMuted mb-1">Valor Atual da Parcela (R$)</label>
-                                        <input type="number" id="sim-parcel-value" oninput="calculateSimulation()" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                        <input type="number" id="sim-parcel-value" oninput="calculateSimulation()" placeholder="0.00" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     </div>
                                     <div>
                                         <label class="block text-[11px] text-textMuted mb-1">Qtd de Parcelas Restantes</label>
-                                        <input type="number" id="sim-parcels-total" oninput="calculateSimulation()" placeholder="0" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                                        <input type="number" id="sim-parcels-total" oninput="calculateSimulation()" placeholder="0" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2 text-xs text-textDark focus:outline-none focus:border-brandGold">
                                     </div>
                                 </div>
 
@@ -483,7 +519,7 @@
                                 <i class="fa-solid fa-copy"></i> Copiar Proposta para WhatsApp
                             </button>
                             <button onclick="saveSimulationAsSale()" class="w-full bg-brandGreen hover:bg-brandGreenHover text-white text-xs font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md">
-                                <i class="fa-solid fa-check-circle text-brandGold"></i> Efetivar Negócio / Gerar Venda
+                                <i class="fa-solid fa-check-circle text-brandGold"></i> Efetivar Negócio / Registrar Venda
                             </button>
                         </div>
                     </div>
@@ -504,10 +540,9 @@
                 </div>
             </section>
 
-            <!-- VIEW 7: PAINEL ADMIN (GERENCIADOR DE LOGINS, METAS E REGRAS) -->
+            <!-- VIEW 7: PAINEL ADMIN -->
             <section id="tab-admin" class="tab-content hidden p-6 space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Formulário para Criar Novo Login -->
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
                         <h3 class="font-bold text-sm text-textDark border-b border-borderLight pb-3 flex items-center gap-2">
                             <i class="fa-solid fa-user-plus text-brandGold"></i> Criar Novo Login / Usuário
@@ -553,7 +588,6 @@
                         </div>
                     </div>
 
-                    <!-- Lista de Logins Ativos e Metas Individuais -->
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm lg:col-span-2 space-y-4">
                         <div class="border-b border-borderLight pb-3">
                             <h3 class="font-bold text-sm text-textDark flex items-center gap-2">
@@ -622,7 +656,6 @@
                         <input type="date" id="modal-last-contact" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                     </div>
                 </div>
-                <!-- Atribuição de Vendedor (Para Dono/Admin) -->
                 <div id="modal-assign-wrapper">
                     <label class="block text-xs font-bold text-brandGold mb-1">Responsável Comercial (Quem vai atender)</label>
                     <select id="modal-assign-user" class="w-full bg-lightBg border border-brandGold/40 rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
@@ -677,6 +710,7 @@
         let currentUser = null;
         let parsedBulkLeads = [];
         let activeTab = 'dashboard';
+        let selectedPaymentMode = 'pix';
 
         crmRef.on('value', (snapshot) => {
             const val = snapshot.val();
@@ -728,65 +762,55 @@
             return u ? u.name : 'Não atribuído';
         }
 
+        function setPaymentMode(mode) {
+            selectedPaymentMode = mode;
+            document.querySelectorAll('.pay-mode-btn').forEach(btn => {
+                btn.className = "pay-mode-btn bg-lightBg border border-borderLight text-textMuted font-semibold py-2 rounded-xl text-xs transition";
+            });
+            const activeBtn = document.getElementById(`pay-mode-${mode}`);
+            if (activeBtn) {
+                activeBtn.className = "pay-mode-btn bg-brandGreen/30 border border-brandGreen text-emerald-300 font-semibold py-2 rounded-xl text-xs transition";
+            }
+        }
+
         function populateCommercialSelectors() {
             const sellers = getCommercialUsers();
-            
-            // 1. Filtro na aba Meus Leads
             const filterSel = document.getElementById('lead-seller-filter');
             if (filterSel) {
                 const prev = filterSel.value;
                 filterSel.innerHTML = `<option value="todos">👥 Todos os Vendedores</option><option value="unassigned">⚠️ Sem Vendedor Atribuído</option>`;
-                sellers.forEach(s => {
-                    filterSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
-                });
+                sellers.forEach(s => { filterSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`; });
                 if ([...filterSel.options].some(o => o.value === prev)) filterSel.value = prev;
             }
 
-            // 2. Seletor na Importação em Lote
             const bulkSel = document.getElementById('bulk-assign-select');
             if (bulkSel) {
                 const prev = bulkSel.value;
                 bulkSel.innerHTML = `<option value="">-- Sem atribuição (Apenas Diretoria) --</option>`;
-                sellers.forEach(s => {
-                    bulkSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
-                });
+                sellers.forEach(s => { bulkSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`; });
                 if ([...bulkSel.options].some(o => o.value === prev)) bulkSel.value = prev;
             }
 
-            // 3. Seletor no Modal de Novo Lead
             const modalSel = document.getElementById('modal-assign-user');
             if (modalSel) {
                 modalSel.innerHTML = `<option value="">-- Sem atribuição --</option>`;
-                sellers.forEach(s => {
-                    modalSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`;
-                });
+                sellers.forEach(s => { modalSel.innerHTML += `<option value="${s.id}">💼 ${s.name}</option>`; });
             }
         }
 
-        // Filtro central de visibilidade por perfil
         function getVisibleLeadsForCurrentUser() {
             if (!currentUser) return [];
             const role = currentUser.role;
-
-            if (role === 'dono' || role === 'admin') {
-                return appData.leads;
-            }
-            if (role === 'comercial') {
-                // Comercial vê APENAS os leads atribuídos ao seu ID e que ainda não foram enviados ao Jurídico
-                return appData.leads.filter(l => String(l.assignedTo) === String(currentUser.id) && l.status !== 'Jurídico');
-            }
-            if (role === 'juridico') {
-                return appData.leads.filter(l => l.status === 'Jurídico' || l.status === 'Convertido');
-            }
+            if (isAdminOrOwner()) return appData.leads;
+            if (role === 'comercial') return appData.leads.filter(l => String(l.assignedTo) === String(currentUser.id) && l.status !== 'Jurídico');
+            if (role === 'juridico') return appData.leads.filter(l => l.status === 'Jurídico' || l.status === 'Convertido');
             return [];
         }
 
         function getVisibleSalesForCurrentUser() {
             if (!currentUser) return [];
             if (isAdminOrOwner()) return appData.sales;
-            if (currentUser.role === 'comercial') {
-                return appData.sales.filter(s => String(s.sellerId) === String(currentUser.id));
-            }
+            if (currentUser.role === 'comercial') return appData.sales.filter(s => String(s.sellerId) === String(currentUser.id));
             return appData.sales;
         }
 
@@ -806,11 +830,7 @@
             const errEl = document.getElementById('login-error-msg');
 
             const foundUser = appData.users.find(u => u.email.toLowerCase() === emailInput && u.pass === passInput);
-
-            if (!foundUser) {
-                errEl.classList.remove('hidden');
-                return;
-            }
+            if (!foundUser) { errEl.classList.remove('hidden'); return; }
 
             errEl.classList.add('hidden');
             currentUser = foundUser;
@@ -845,6 +865,11 @@
                 document.getElementById('nav-juridico').classList.remove('hidden');
             }
 
+            // Define data padrão de hoje no simulador
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dueDateInput = document.getElementById('sim-due-date');
+            if (dueDateInput && !dueDateInput.value) dueDateInput.value = todayStr;
+
             populateCommercialSelectors();
             switchTab('dashboard');
         }
@@ -858,11 +883,8 @@
         function toggleNewUserMetaField() {
             const role = document.getElementById('admin-new-role').value;
             const wrapper = document.getElementById('admin-new-meta-wrapper');
-            if (role === 'comercial') {
-                wrapper.classList.remove('hidden');
-            } else {
-                wrapper.classList.add('hidden');
-            }
+            if (role === 'comercial') wrapper.classList.remove('hidden');
+            else wrapper.classList.add('hidden');
         }
 
         function renderAdminUsers() {
@@ -870,19 +892,11 @@
             document.getElementById('admin-alert-days').value = appData.alertDays || 3;
             tbody.innerHTML = '';
 
-            const roleLabels = {
-                dono: '👑 Dono',
-                admin: '⚙️ Admin',
-                juridico: '⚖️ Jurídico',
-                comercial: '💼 Comercial'
-            };
+            const roleLabels = { dono: '👑 Dono', admin: '⚙️ Admin', juridico: '⚖️ Jurídico', comercial: '💼 Comercial' };
 
             appData.users.forEach(u => {
                 const metaCell = u.role === 'comercial'
-                    ? `<div class="flex items-center gap-1.5">
-                         <input type="number" id="meta-input-${u.id}" value="${u.meta || 0}" class="w-24 bg-lightBg border border-brandGold/40 rounded-lg px-2 py-1 text-xs text-brandGold font-bold">
-                         <button onclick="updateUserMeta(${u.id})" title="Salvar Meta" class="bg-brandGold text-black px-2 py-1 rounded-lg text-[11px] font-bold hover:opacity-90">OK</button>
-                       </div>`
+                    ? `<div class="flex items-center gap-1.5"><input type="number" id="meta-input-${u.id}" value="${u.meta || 0}" class="w-24 bg-lightBg border border-brandGold/40 rounded-lg px-2 py-1 text-xs text-brandGold font-bold"><button onclick="updateUserMeta(${u.id})" class="bg-brandGold text-black px-2 py-1 rounded-lg text-[11px] font-bold">OK</button></div>`
                     : `<span class="text-textMuted text-[11px]">—</span>`;
 
                 tbody.innerHTML += `
@@ -892,9 +906,7 @@
                         <td class="p-3 font-mono text-textMuted">${u.pass}</td>
                         <td class="p-3"><span class="bg-brandGreen/30 text-emerald-400 border border-brandGreen/50 px-2 py-0.5 rounded-full font-semibold">${roleLabels[u.role] || u.role}</span></td>
                         <td class="p-3">${metaCell}</td>
-                        <td class="p-3 text-right">
-                            ${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-400 hover:underline font-semibold">Remover</button>` : '<span class="text-textMuted text-[10px]">Principal</span>'}
-                        </td>
+                        <td class="p-3 text-right">${u.id !== 1 ? `<button onclick="deleteUser(${u.id})" class="text-red-400 hover:underline font-semibold">Remover</button>` : '<span class="text-textMuted text-[10px]">Principal</span>'}</td>
                     </tr>
                 `;
             });
@@ -908,7 +920,7 @@
             if (user) {
                 user.meta = newMeta;
                 saveToCloud();
-                showToast(`Meta de ${user.name} atualizada para R$ ${newMeta.toLocaleString('pt-BR', {minimumFractionDigits: 2})}!`);
+                showToast(`Meta de ${user.name} atualizada!`);
             }
         }
 
@@ -919,27 +931,19 @@
             const role = document.getElementById('admin-new-role').value;
             const meta = role === 'comercial' ? (parseFloat(document.getElementById('admin-new-meta').value) || 0) : 0;
 
-            if (!name || !email || !pass) {
-                alert("Preencha Nome, E-mail e Senha para criar o login.");
-                return;
-            }
-
-            if (appData.users.some(u => u.email.toLowerCase() === email)) {
-                alert("Já existe um usuário cadastrado com este e-mail.");
-                return;
-            }
+            if (!name || !email || !pass) { alert("Preencha Nome, E-mail e Senha."); return; }
+            if (appData.users.some(u => u.email.toLowerCase() === email)) { alert("E-mail já cadastrado."); return; }
 
             appData.users.push({ id: Date.now(), name, email, pass, role, meta });
             saveToCloud();
-
             document.getElementById('admin-new-name').value = '';
             document.getElementById('admin-new-email').value = '';
             document.getElementById('admin-new-pass').value = '';
-            showToast(`Login de ${name} salvo na nuvem!`);
+            showToast(`Login de ${name} salvo!`);
         }
 
         function deleteUser(id) {
-            if (confirm("Remover este acesso da equipe?")) {
+            if (confirm("Remover este acesso?")) {
                 appData.users = appData.users.filter(u => u.id !== id);
                 saveToCloud();
                 showToast("Usuário removido.");
@@ -975,8 +979,8 @@
                 negotiating: 'Negociando',
                 juridico: 'Setor Jurídico',
                 'bulk-import': 'Importação em Lote',
-                sales: 'Minhas Vendas',
-                simulator: 'Simulador de Propostas',
+                sales: 'Minhas Vendas & Financeiro',
+                simulator: 'Simulador & Fechamento',
                 ranking: 'Ranking',
                 admin: 'Painel Admin & Metas'
             };
@@ -1020,7 +1024,22 @@
             document.getElementById('count-convertidos').innerText = leadsVisiveis.filter(l => l.status === 'Convertido').length;
             document.getElementById('count-perdidos').innerText = leadsVisiveis.filter(l => l.status === 'Perdido').length;
 
-            // Cálculo de Meta: Individual para Comercial / Geral (soma da equipe) para Dono e Admin
+            // Alerta Financeiro de Vencimentos no Dashboard para Dono/Admin
+            const banner = document.getElementById('financial-alert-banner');
+            const alertText = document.getElementById('financial-alert-text');
+            if (isAdminOrOwner()) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                const dueTodaySales = appData.sales.filter(s => s.dueDate === todayStr && s.finStatus !== 'Quitado' && s.finStatus !== 'Cancelado');
+                if (dueTodaySales.length > 0) {
+                    banner.classList.remove('hidden');
+                    alertText.innerHTML = `Existem <strong class="text-amber-300">${dueTodaySales.length} contrato(s)</strong> com vencimento de boleto/entrada programados para hoje (${dueTodaySales.map(s=>s.client).join(', ')}).`;
+                } else {
+                    banner.classList.add('hidden');
+                }
+            } else {
+                banner.classList.add('hidden');
+            }
+
             let targetMeta = 0;
             if (currentUser && currentUser.role === 'comercial') {
                 targetMeta = parseFloat(currentUser.meta) || 0;
@@ -1102,11 +1121,8 @@
                 
                 let matchSeller = true;
                 if (isAdminOrOwner()) {
-                    if (sellerFilter === 'unassigned') {
-                        matchSeller = !lead.assignedTo;
-                    } else if (sellerFilter !== 'todos') {
-                        matchSeller = String(lead.assignedTo) === String(sellerFilter);
-                    }
+                    if (sellerFilter === 'unassigned') matchSeller = !lead.assignedTo;
+                    else if (sellerFilter !== 'todos') matchSeller = String(lead.assignedTo) === String(sellerFilter);
                 }
                 return matchStatus && matchSearch && matchSeller;
             });
@@ -1119,7 +1135,6 @@
             const sellers = getCommercialUsers();
 
             filtered.forEach(lead => {
-                // Controles exclusivos para Dono e Admin: Reatribuir Vendedor + Botão Excluir
                 let adminControls = '';
                 if (isAdminOrOwner()) {
                     let sellerOptions = `<option value="">⚠️ Sem vendedor</option>`;
@@ -1129,7 +1144,7 @@
                     });
 
                     adminControls = `
-                        <select onchange="assignLeadToUser(${lead.id}, this.value)" title="Atribuir lead para colaborador" class="bg-lightBg border border-brandGold/40 text-xs text-brandGold font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none">
+                        <select onchange="assignLeadToUser(${lead.id}, this.value)" title="Atribuir lead" class="bg-lightBg border border-brandGold/40 text-xs text-brandGold font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none">
                             ${sellerOptions}
                         </select>
                         <button onclick="deleteLead(${lead.id})" title="Apagar Lead" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition">
@@ -1245,13 +1260,9 @@
                     const procMatch = line.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/);
                     const phoneMatch = line.match(/\(\d{2}\)\s*\d{4,5}-\d{4}/g);
 
-                    if (procMatch) {
-                        processNumber = procMatch[0];
-                    } else if (phoneMatch) {
-                        phones.push(...phoneMatch);
-                    } else if (!name) {
-                        name = line;
-                    }
+                    if (procMatch) processNumber = procMatch[0];
+                    else if (phoneMatch) phones.push(...phoneMatch);
+                    else if (!name) name = line;
                 });
 
                 if (name) {
@@ -1300,8 +1311,7 @@
             appData.leads.unshift(...readyLeads);
             saveToCloud();
 
-            const targetMsg = targetSellerId ? ` direcionados para ${getUserNameById(targetSellerId)}` : '';
-            showToast(`${readyLeads.length} leads importados${targetMsg}!`);
+            showToast(`${readyLeads.length} leads importados!`);
             document.getElementById('bulk-import-textarea').value = '';
             processBulkText();
             switchTab('leads');
@@ -1313,7 +1323,7 @@
                 lead.status = newStatus;
                 lead.lastContact = new Date().toISOString().split('T')[0];
                 saveToCloud();
-                showToast(`Status atualizado para ${newStatus} na nuvem!`);
+                showToast(`Status atualizado para ${newStatus}!`);
             }
         }
 
@@ -1331,11 +1341,8 @@
             
             populateCommercialSelectors();
             const assignWrapper = document.getElementById('modal-assign-wrapper');
-            if (isAdminOrOwner()) {
-                assignWrapper.classList.remove('hidden');
-            } else {
-                assignWrapper.classList.add('hidden');
-            }
+            if (isAdminOrOwner()) assignWrapper.classList.remove('hidden');
+            else assignWrapper.classList.add('hidden');
 
             document.getElementById('lead-modal').classList.remove('hidden');
             document.getElementById('lead-modal').classList.add('flex');
@@ -1370,7 +1377,7 @@
             });
             saveToCloud();
             closeLeadModal();
-            showToast("Lead salvo na nuvem!");
+            showToast("Lead salvo!");
         }
 
         function calculateSimulation() {
@@ -1386,29 +1393,44 @@
         }
 
         function copyProposalText() {
-            showToast("Proposta copiada para a área de transferência!");
+            showToast("Proposta copiada!");
         }
 
         function saveSimulationAsSale() {
             const name = document.getElementById('sim-client-name').value.trim();
             const fee = parseFloat(document.getElementById('sim-contract-fee').value) || 300;
+            const entryVal = parseFloat(document.getElementById('sim-entry-value').value) || fee;
+            const dueDate = document.getElementById('sim-due-date').value || new Date().toISOString().split('T')[0];
+
             if(!name) { alert('Insira o nome do cliente.'); return; }
+
+            const modeLabels = { pix: 'À Vista (PIX)', cartao: 'Cartão de Crédito', boleto: 'Boleto / Carnê' };
 
             appData.sales.push({
                 id: Date.now(),
                 date: new Date().toISOString().split('T')[0],
+                dueDate: dueDate,
                 client: name,
                 sellerId: currentUser ? currentUser.id : '',
                 sellerName: currentUser ? currentUser.name : 'Diretoria',
+                paymentMode: modeLabels[selectedPaymentMode] || 'PIX',
                 process: document.getElementById('sim-client-cpf').value || 'N/A',
-                service: 'Revisional',
                 totalVal: fee,
-                receivedVal: fee,
-                status: 'Aprovado'
+                receivedVal: entryVal,
+                finStatus: 'Aguardando Entrada'
             });
             saveToCloud();
-            showToast("Venda registrada na nuvem!");
+            showToast("Venda e condições financeiras registradas!");
             switchTab('sales');
+        }
+
+        function updateSaleFinancialStatus(saleId, newStatus) {
+            const sale = appData.sales.find(s => s.id === saleId);
+            if (sale) {
+                sale.finStatus = newStatus;
+                saveToCloud();
+                showToast(`Status financeiro alterado para ${newStatus}!`);
+            }
         }
 
         function renderSalesTable() {
@@ -1416,19 +1438,47 @@
             tbody.innerHTML = '';
             const salesVisiveis = getVisibleSalesForCurrentUser();
             if (salesVisiveis.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-textMuted italic">Nenhuma venda registrada ainda.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-textMuted italic">Nenhuma venda registrada ainda.</td></tr>`;
                 return;
             }
+
+            const todayStr = new Date().toISOString().split('T')[0];
+
             salesVisiveis.forEach(s => {
+                const isDueToday = s.dueDate === todayStr;
+                const dateBadge = isDueToday 
+                    ? `<span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold border border-amber-500/40" title="Vence Hoje!">${s.dueDate} ⚠️</span>` 
+                    : `<span>${s.dueDate || s.date}</span>`;
+
+                let statusDropdown = '';
+                if (isAdminOrOwner()) {
+                    statusDropdown = `
+                        <select onchange="updateSaleFinancialStatus(${s.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGold font-semibold">
+                            <option value="Aguardando Entrada" ${s.finStatus==='Aguardando Entrada'?'selected':''}>⏳ Aguardando Entrada</option>
+                            <option value="Adimplente (Em Dia)" ${s.finStatus==='Adimplente (Em Dia)'?'selected':''}>🟢 Adimplente (Em Dia)</option>
+                            <option value="Inadimplente (Atrasado)" ${s.finStatus==='Inadimplente (Atrasado)'?'selected':''}>🔴 Inadimplente (Atrasado)</option>
+                            <option value="Quitado" ${s.finStatus==='Quitado'?'selected':''}>✅ Quitado</option>
+                            <option value="Cancelado" ${s.finStatus==='Cancelado'?'selected':''}>❌ Cancelado</option>
+                        </select>
+                    `;
+                } else {
+                    statusDropdown = `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-zinc-800 text-textMuted">${s.finStatus || 'Em Andamento'}</span>`;
+                }
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-zinc-900/60">
-                        <td class="p-3.5">${s.date}</td>
+                        <td class="p-3.5 font-mono text-[11px]">${dateBadge}</td>
                         <td class="p-3.5 font-bold">${s.client}</td>
                         <td class="p-3.5 text-brandGold font-semibold">${s.sellerName || 'Equipe'}</td>
-                        <td class="p-3.5">${s.process}</td>
+                        <td class="p-3.5 text-textDark font-medium">${s.paymentMode || 'PIX'}</td>
                         <td class="p-3.5">R$ ${s.totalVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                         <td class="p-3.5 text-emerald-400 font-bold">R$ ${s.receivedVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td class="p-3.5"><span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">${s.status}</span></td>
+                        <td class="p-3.5">${statusDropdown}</td>
+                        <td class="p-3.5 text-right">
+                            <button onclick="openWhatsApp('11999999999', '${s.client}')" title="Cobrar / Chamar Cliente" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-xl text-xs font-semibold">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
@@ -1445,7 +1495,7 @@
 
             const rankingData = sellers.map(seller => {
                 const sold = appData.sales
-                    .filter(s => String(s.sellerId) === String(seller.id))
+                    .filter(s => String(s.sellerId) === String(seller.id) && s.finStatus !== 'Cancelado')
                     .reduce((acc, s) => acc + s.receivedVal, 0);
                 const meta = parseFloat(seller.meta) || 0;
                 const pct = meta > 0 ? Math.min(100, Math.round((sold / meta) * 100)) : 0;
