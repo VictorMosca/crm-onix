@@ -662,7 +662,7 @@
                     </select>
                 </div>
 
-                <!-- BLOCO FINANCEIRO ABERTO NO LEAD (QUANDO CONVERTIDO OU EDITADO) -->
+                <!-- BLOCO FINANCEIRO ABERTO NO LEAD -->
                 <div id="modal-financial-section" class="hidden bg-lightBg border border-brandGold/40 p-4 rounded-xl space-y-3">
                     <h4 class="text-xs font-bold text-brandGold uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-file-invoice-dollar"></i> Dados de Fechamento / Financeiro
@@ -1181,7 +1181,6 @@
                     `;
                 }
 
-                // Tag se estiver convertido e tiver dados financeiros
                 let financeTag = '';
                 if (lead.status === 'Convertido' && lead.paymentMode) {
                     financeTag = `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">💳 ${lead.paymentMode} (Entrada: R$ ${Number(lead.entryVal || 0).toFixed(2)})</span>`;
@@ -1365,7 +1364,9 @@
             if (!lead) return;
 
             if (newStatus === 'Convertido') {
-                // Abre o modal para preencher os dados financeiros da conversão
+                // Abre o modal diretamente para preencher os dados financeiros
+                lead.status = 'Convertido';
+                saveToCloud();
                 openEditLeadModal(id);
             } else {
                 lead.status = newStatus;
@@ -1493,7 +1494,6 @@
             }
 
             if (leadId) {
-                // Editando lead existente
                 const lead = appData.leads.find(l => l.id == leadId);
                 if (lead) {
                     lead.name = name;
@@ -1507,13 +1507,11 @@
                     lead.totalVal = totalVal;
                     lead.entryVal = entryVal;
 
-                    // Se converteu, registra ou atualiza na tabela de vendas
                     if (status === 'Convertido') {
                         upsertSaleFromLead(lead);
                     }
                 }
             } else {
-                // Criando novo lead
                 const newLead = {
                     id: Date.now(),
                     name, phone,
@@ -1540,7 +1538,6 @@
         }
 
         function upsertSaleFromLead(lead) {
-            // Verifica se já existe venda para este lead
             const existingSaleIndex = appData.sales.findIndex(s => s.leadId === lead.id);
             const sellerObj = appData.users.find(u => String(u.id) === String(lead.assignedTo));
 
@@ -1593,7 +1590,6 @@
             const modeLabels = { pix: 'À Vista (PIX)', cartao: 'Cartão de Crédito', boleto: 'Boleto / Carnê' };
             const payMode = modeLabels[selectedPaymentMode] || 'À Vista (PIX)';
 
-            // Cria o lead convertido e a venda simultaneamente
             const newLead = {
                 id: Date.now(),
                 name: name,
