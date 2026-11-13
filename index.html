@@ -134,7 +134,7 @@
                         <i class="fa-solid fa-file-import w-5 text-center"></i> Importar Lote
                     </button>
                     <button onclick="switchTab('simulator')" id="nav-simulator" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
-                        <i class="fa-solid fa-calculator w-5 text-center"></i> Simulador & Venda
+                        <i class="fa-solid fa-calculator w-5 text-center"></i> Simulador & Proposta
                     </button>
                     <button onclick="switchTab('ranking')" id="nav-ranking" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition text-textMuted hover:text-textDark hover:bg-lightBg">
                         <i class="fa-solid fa-trophy w-5 text-center"></i> Ranking
@@ -174,7 +174,6 @@
 
             <!-- VIEW 1: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content p-6 space-y-6">
-                <!-- Alerta Financeiro Global (Visível apenas para Dono e Admin) -->
                 <div id="financial-alert-banner" class="hidden bg-amber-500/10 border border-amber-500/40 p-4 rounded-2xl flex items-center justify-between shadow-sm">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg font-bold shrink-0">
@@ -422,7 +421,7 @@
                 </div>
             </section>
 
-            <!-- VIEW 5: SIMULADOR & FECHAMENTO COMERCIAL -->
+            <!-- VIEW 5: SIMULADOR & FECHAMENTO -->
             <section id="tab-simulator" class="tab-content hidden p-6 space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-cardBg border border-borderLight p-5 rounded-2xl shadow-sm space-y-4">
@@ -446,7 +445,6 @@
                                 </div>
                             </div>
 
-                            <!-- OPÇÕES DE PAGAMENTO (SOLICITADO) -->
                             <div class="border-t border-borderLight pt-3 space-y-3">
                                 <label class="block text-xs font-bold text-brandGold">Forma de Pagamento Acertada</label>
                                 <div class="grid grid-cols-3 gap-2">
@@ -617,14 +615,15 @@
         </main>
     </div>
 
-    <!-- MODAL: NEW LEAD -->
+    <!-- MODAL: NEW LEAD / CONVERSÃO COM DADOS FINANCEIROS -->
     <div id="lead-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-cardBg border border-borderLight rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div class="bg-cardBg border border-borderLight rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
             <div class="p-5 border-b border-borderLight flex justify-between items-center">
-                <h3 class="font-bold text-sm text-textDark">Novo Lead / Contato</h3>
+                <h3 id="lead-modal-title" class="font-bold text-sm text-textDark">Novo Lead / Contato</h3>
                 <button onclick="closeLeadModal()" class="text-textMuted hover:text-textDark text-xs"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-            <div class="p-5 space-y-4">
+            <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+                <input type="hidden" id="modal-lead-id" value="">
                 <div>
                     <label class="block text-xs font-medium text-textMuted mb-1">Nome do Cliente</label>
                     <input type="text" id="modal-name" placeholder="Nome completo" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
@@ -641,8 +640,8 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-textMuted mb-1">Status Inicial</label>
-                        <select id="modal-status" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
+                        <label class="block text-xs font-medium text-textMuted mb-1">Status</label>
+                        <select id="modal-status" onchange="checkModalStatusChange()" class="w-full bg-lightBg border border-borderLight rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                             <option value="Novos">Novos</option>
                             <option value="Em Contato">Em Contato</option>
                             <option value="Negociando">Negociando</option>
@@ -657,10 +656,41 @@
                     </div>
                 </div>
                 <div id="modal-assign-wrapper">
-                    <label class="block text-xs font-bold text-brandGold mb-1">Responsável Comercial (Quem vai atender)</label>
+                    <label class="block text-xs font-bold text-brandGold mb-1">Responsável Comercial</label>
                     <select id="modal-assign-user" class="w-full bg-lightBg border border-brandGold/40 rounded-xl px-3.5 py-2.5 text-xs text-textDark focus:outline-none focus:border-brandGold">
                         <option value="">-- Sem atribuição --</option>
                     </select>
+                </div>
+
+                <!-- BLOCO FINANCEIRO ABERTO NO LEAD (QUANDO CONVERTIDO OU EDITADO) -->
+                <div id="modal-financial-section" class="hidden bg-lightBg border border-brandGold/40 p-4 rounded-xl space-y-3">
+                    <h4 class="text-xs font-bold text-brandGold uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> Dados de Fechamento / Financeiro
+                    </h4>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-textMuted mb-1">Forma de Pagamento</label>
+                            <select id="modal-pay-mode" class="w-full bg-cardBg border border-borderLight rounded-xl px-3 py-2 text-xs text-textDark font-semibold">
+                                <option value="À Vista (PIX)">À Vista (PIX)</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="Boleto / Carnê">Boleto / Carnê</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-textMuted mb-1">Data de Vencimento / Entrada</label>
+                            <input type="date" id="modal-due-date" class="w-full bg-cardBg border border-borderLight rounded-xl px-3 py-2 text-xs text-textDark">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-textMuted mb-1">Valor Total do Contrato (R$)</label>
+                            <input type="number" id="modal-total-val" value="300" class="w-full bg-cardBg border border-borderLight rounded-xl px-3 py-2 text-xs text-textDark font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-textMuted mb-1">Valor da Entrada (R$)</label>
+                            <input type="number" id="modal-entry-val" value="300" class="w-full bg-cardBg border border-borderLight rounded-xl px-3 py-2 text-xs text-textDark font-bold text-emerald-400">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="p-4 border-t border-borderLight bg-lightBg flex justify-end gap-2">
@@ -865,7 +895,6 @@
                 document.getElementById('nav-juridico').classList.remove('hidden');
             }
 
-            // Define data padrão de hoje no simulador
             const todayStr = new Date().toISOString().split('T')[0];
             const dueDateInput = document.getElementById('sim-due-date');
             if (dueDateInput && !dueDateInput.value) dueDateInput.value = todayStr;
@@ -1024,7 +1053,6 @@
             document.getElementById('count-convertidos').innerText = leadsVisiveis.filter(l => l.status === 'Convertido').length;
             document.getElementById('count-perdidos').innerText = leadsVisiveis.filter(l => l.status === 'Perdido').length;
 
-            // Alerta Financeiro de Vencimentos no Dashboard para Dono/Admin
             const banner = document.getElementById('financial-alert-banner');
             const alertText = document.getElementById('financial-alert-text');
             if (isAdminOrOwner()) {
@@ -1153,21 +1181,31 @@
                     `;
                 }
 
+                // Tag se estiver convertido e tiver dados financeiros
+                let financeTag = '';
+                if (lead.status === 'Convertido' && lead.paymentMode) {
+                    financeTag = `<span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">💳 ${lead.paymentMode} (Entrada: R$ ${Number(lead.entryVal || 0).toFixed(2)})</span>`;
+                }
+
                 container.innerHTML += `
                     <div class="bg-cardBg border border-borderLight p-4 rounded-2xl shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
                         <div>
                             <div class="flex items-center gap-2 flex-wrap">
                                 <h4 class="font-bold text-xs text-textDark">${lead.name}</h4>
                                 ${isAdminOrOwner() ? `<span class="text-[10px] bg-brandGold/15 text-brandGold border border-brandGold/30 px-2 py-0.5 rounded-full font-semibold">${getUserNameById(lead.assignedTo)}</span>` : ''}
+                                ${financeTag}
                             </div>
                             <p class="text-xs text-textMuted mt-0.5">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
                             ${adminControls}
+                            <button onclick="openEditLeadModal(${lead.id})" title="Editar / Preencher Venda" class="bg-lightBg hover:bg-zinc-800 text-brandGold border border-borderLight px-2.5 py-1.5 rounded-xl text-xs font-semibold">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                             <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5">
                                 <i class="fa-brands fa-whatsapp"></i> WhatsApp
                             </button>
-                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGold">
+                            <select onchange="updateLeadStatusFromSelect(${lead.id}, this.value)" class="bg-lightBg border border-borderLight text-xs text-textDark rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-brandGold">
                                 <option value="Novos" ${lead.status==='Novos'?'selected':''}>Novos</option>
                                 <option value="Em Contato" ${lead.status==='Em Contato'?'selected':''}>Em Contato</option>
                                 <option value="Negociando" ${lead.status==='Negociando'?'selected':''}>Negociando</option>
@@ -1198,7 +1236,8 @@
                         </div>
                         <div class="flex gap-2">
                             <button onclick="updateLeadStatus(${lead.id}, 'Jurídico')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Enviar para Jurídico ⚖️</button>
-                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
+                            <button onclick="openEditLeadModal(${lead.id})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold">Converter / Fechar Venda</button>
+                            <button onclick="openWhatsApp('${lead.phone}', '${lead.name}')" class="bg-emerald-600/40 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">WhatsApp</button>
                             ${isAdminOrOwner() ? `<button onclick="deleteLead(${lead.id})" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
@@ -1223,7 +1262,7 @@
                             <p class="text-xs text-textMuted">Tel: ${lead.phone} | Proc: ${lead.process}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="updateLeadStatus(${lead.id}, 'Convertido')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold">Finalizar / Fechar Venda</button>
+                            <button onclick="openEditLeadModal(${lead.id})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold">Preencher Venda / Finalizar</button>
                             ${isAdminOrOwner() ? `<button onclick="deleteLead(${lead.id})" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl text-xs"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
@@ -1274,7 +1313,11 @@
                         status: 'Novos',
                         lastContact: new Date().toISOString().split('T')[0],
                         notes: 'Importado em Lote',
-                        assignedTo: ''
+                        assignedTo: '',
+                        paymentMode: '',
+                        dueDate: '',
+                        totalVal: 300,
+                        entryVal: 300
                     });
                 }
             });
@@ -1317,6 +1360,22 @@
             switchTab('leads');
         }
 
+        function updateLeadStatusFromSelect(id, newStatus) {
+            const lead = appData.leads.find(l => l.id === id);
+            if (!lead) return;
+
+            if (newStatus === 'Convertido') {
+                // Abre o modal para preencher os dados financeiros da conversão
+                openEditLeadModal(id);
+            } else {
+                lead.status = newStatus;
+                lead.lastContact = new Date().toISOString().split('T')[0];
+                saveToCloud();
+                showToast(`Status atualizado para ${newStatus}!`);
+                refreshActiveView();
+            }
+        }
+
         function updateLeadStatus(id, newStatus) {
             const lead = appData.leads.find(l => l.id === id);
             if(lead) {
@@ -1324,6 +1383,17 @@
                 lead.lastContact = new Date().toISOString().split('T')[0];
                 saveToCloud();
                 showToast(`Status atualizado para ${newStatus}!`);
+                refreshActiveView();
+            }
+        }
+
+        function checkModalStatusChange() {
+            const status = document.getElementById('modal-status').value;
+            const finSection = document.getElementById('modal-financial-section');
+            if (status === 'Convertido') {
+                finSection.classList.remove('hidden');
+            } else {
+                finSection.classList.add('hidden');
             }
         }
 
@@ -1333,16 +1403,58 @@
         }
 
         function openNewLeadModal() {
+            document.getElementById('modal-lead-id').value = "";
+            document.getElementById('lead-modal-title').innerText = "Novo Lead / Contato";
             document.getElementById('modal-name').value = "";
             document.getElementById('modal-phone').value = "";
             document.getElementById('modal-process').value = "";
             document.getElementById('modal-status').value = "Novos";
             document.getElementById('modal-last-contact').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modal-financial-section').classList.add('hidden');
             
             populateCommercialSelectors();
             const assignWrapper = document.getElementById('modal-assign-wrapper');
             if (isAdminOrOwner()) assignWrapper.classList.remove('hidden');
             else assignWrapper.classList.add('hidden');
+
+            document.getElementById('lead-modal').classList.remove('hidden');
+            document.getElementById('lead-modal').classList.add('flex');
+        }
+
+        function openEditLeadModal(leadId) {
+            const lead = appData.leads.find(l => l.id === leadId);
+            if (!lead) return;
+
+            document.getElementById('modal-lead-id').value = lead.id;
+            document.getElementById('lead-modal-title').innerText = `Editar / Converter Lead: ${lead.name}`;
+            document.getElementById('modal-name').value = lead.name;
+            document.getElementById('modal-phone').value = lead.phone;
+            document.getElementById('modal-process').value = lead.process;
+            document.getElementById('modal-status').value = lead.status;
+            document.getElementById('modal-last-contact').value = lead.lastContact || new Date().toISOString().split('T')[0];
+
+            populateCommercialSelectors();
+            const assignSel = document.getElementById('modal-assign-user');
+            if (assignSel) assignSel.value = lead.assignedTo || '';
+
+            const assignWrapper = document.getElementById('modal-assign-wrapper');
+            if (isAdminOrOwner()) assignWrapper.classList.remove('hidden');
+            else assignWrapper.classList.add('hidden');
+
+            const finSection = document.getElementById('modal-financial-section');
+            if (lead.status === 'Convertido') {
+                finSection.classList.remove('hidden');
+                document.getElementById('modal-pay-mode').value = lead.paymentMode || 'À Vista (PIX)';
+                document.getElementById('modal-due-date').value = lead.dueDate || new Date().toISOString().split('T')[0];
+                document.getElementById('modal-total-val').value = lead.totalVal || 300;
+                document.getElementById('modal-entry-val').value = lead.entryVal || 300;
+            } else {
+                finSection.classList.add('hidden');
+                document.getElementById('modal-pay-mode').value = 'À Vista (PIX)';
+                document.getElementById('modal-due-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('modal-total-val').value = 300;
+                document.getElementById('modal-entry-val').value = 300;
+            }
 
             document.getElementById('lead-modal').classList.remove('hidden');
             document.getElementById('lead-modal').classList.add('flex');
@@ -1354,8 +1466,10 @@
         }
 
         function saveLeadFromModal() {
+            const leadId = document.getElementById('modal-lead-id').value;
             const name = document.getElementById('modal-name').value.trim();
             const phone = document.getElementById('modal-phone').value.trim();
+            const status = document.getElementById('modal-status').value;
             if(!name || !phone) { alert('Preencha nome e telefone.'); return; }
 
             let assignedTo = '';
@@ -1365,19 +1479,91 @@
             } else if (currentUser && currentUser.role === 'comercial') {
                 assignedTo = currentUser.id;
             }
-            
-            appData.leads.unshift({
-                id: Date.now(),
-                name, phone,
-                process: document.getElementById('modal-process').value || 'N/A',
-                status: document.getElementById('modal-status').value,
-                lastContact: document.getElementById('modal-last-contact').value,
-                notes: '',
-                assignedTo
-            });
+
+            let payMode = '';
+            let dueDate = '';
+            let totalVal = 300;
+            let entryVal = 300;
+
+            if (status === 'Convertido') {
+                payMode = document.getElementById('modal-pay-mode').value;
+                dueDate = document.getElementById('modal-due-date').value || new Date().toISOString().split('T')[0];
+                totalVal = parseFloat(document.getElementById('modal-total-val').value) || 300;
+                entryVal = parseFloat(document.getElementById('modal-entry-val').value) || 300;
+            }
+
+            if (leadId) {
+                // Editando lead existente
+                const lead = appData.leads.find(l => l.id == leadId);
+                if (lead) {
+                    lead.name = name;
+                    lead.phone = phone;
+                    lead.process = document.getElementById('modal-process').value || 'N/A';
+                    lead.status = status;
+                    lead.lastContact = document.getElementById('modal-last-contact').value;
+                    if (isAdminOrOwner() && assignedTo) lead.assignedTo = assignedTo;
+                    lead.paymentMode = payMode;
+                    lead.dueDate = dueDate;
+                    lead.totalVal = totalVal;
+                    lead.entryVal = entryVal;
+
+                    // Se converteu, registra ou atualiza na tabela de vendas
+                    if (status === 'Convertido') {
+                        upsertSaleFromLead(lead);
+                    }
+                }
+            } else {
+                // Criando novo lead
+                const newLead = {
+                    id: Date.now(),
+                    name, phone,
+                    process: document.getElementById('modal-process').value || 'N/A',
+                    status: status,
+                    lastContact: document.getElementById('modal-last-contact').value,
+                    notes: '',
+                    assignedTo,
+                    paymentMode: payMode,
+                    dueDate: dueDate,
+                    totalVal: totalVal,
+                    entryVal: entryVal
+                };
+                appData.leads.unshift(newLead);
+                if (status === 'Convertido') {
+                    upsertSaleFromLead(newLead);
+                }
+            }
+
             saveToCloud();
             closeLeadModal();
-            showToast("Lead salvo!");
+            showToast("Lead e dados de venda salvos na nuvem!");
+            refreshActiveView();
+        }
+
+        function upsertSaleFromLead(lead) {
+            // Verifica se já existe venda para este lead
+            const existingSaleIndex = appData.sales.findIndex(s => s.leadId === lead.id);
+            const sellerObj = appData.users.find(u => String(u.id) === String(lead.assignedTo));
+
+            const saleData = {
+                id: existingSaleIndex !== -1 ? appData.sales[existingSaleIndex].id : Date.now(),
+                leadId: lead.id,
+                date: new Date().toISOString().split('T')[0],
+                dueDate: lead.dueDate || new Date().toISOString().split('T')[0],
+                client: lead.name,
+                sellerId: lead.assignedTo || (currentUser ? currentUser.id : ''),
+                sellerName: sellerObj ? sellerObj.name : (currentUser ? currentUser.name : 'Equipe'),
+                paymentMode: lead.paymentMode || 'À Vista (PIX)',
+                process: lead.process,
+                totalVal: lead.totalVal || 300,
+                receivedVal: lead.entryVal || 300,
+                finStatus: existingSaleIndex !== -1 ? appData.sales[existingSaleIndex].finStatus : 'Aguardando Entrada'
+            };
+
+            if (existingSaleIndex !== -1) {
+                appData.sales[existingSaleIndex] = saleData;
+            } else {
+                appData.sales.push(saleData);
+            }
         }
 
         function calculateSimulation() {
@@ -1405,22 +1591,42 @@
             if(!name) { alert('Insira o nome do cliente.'); return; }
 
             const modeLabels = { pix: 'À Vista (PIX)', cartao: 'Cartão de Crédito', boleto: 'Boleto / Carnê' };
+            const payMode = modeLabels[selectedPaymentMode] || 'À Vista (PIX)';
+
+            // Cria o lead convertido e a venda simultaneamente
+            const newLead = {
+                id: Date.now(),
+                name: name,
+                phone: '(11) 99999-9999',
+                process: document.getElementById('sim-client-cpf').value || 'N/A',
+                status: 'Convertido',
+                lastContact: new Date().toISOString().split('T')[0],
+                notes: 'Gerado via Simulador',
+                assignedTo: currentUser ? currentUser.id : '',
+                paymentMode: payMode,
+                dueDate: dueDate,
+                totalVal: fee,
+                entryVal: entryVal
+            };
+            appData.leads.unshift(newLead);
 
             appData.sales.push({
-                id: Date.now(),
+                id: Date.now() + 1,
+                leadId: newLead.id,
                 date: new Date().toISOString().split('T')[0],
                 dueDate: dueDate,
                 client: name,
                 sellerId: currentUser ? currentUser.id : '',
                 sellerName: currentUser ? currentUser.name : 'Diretoria',
-                paymentMode: modeLabels[selectedPaymentMode] || 'PIX',
-                process: document.getElementById('sim-client-cpf').value || 'N/A',
+                paymentMode: payMode,
+                process: newLead.process,
                 totalVal: fee,
                 receivedVal: entryVal,
                 finStatus: 'Aguardando Entrada'
             });
+
             saveToCloud();
-            showToast("Venda e condições financeiras registradas!");
+            showToast("Venda e condições financeiras registradas com sucesso!");
             switchTab('sales');
         }
 
@@ -1471,8 +1677,8 @@
                         <td class="p-3.5 font-bold">${s.client}</td>
                         <td class="p-3.5 text-brandGold font-semibold">${s.sellerName || 'Equipe'}</td>
                         <td class="p-3.5 text-textDark font-medium">${s.paymentMode || 'PIX'}</td>
-                        <td class="p-3.5">R$ ${s.totalVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td class="p-3.5 text-emerald-400 font-bold">R$ ${s.receivedVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3.5">R$ ${Number(s.totalVal || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3.5 text-emerald-400 font-bold">R$ ${Number(s.receivedVal || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                         <td class="p-3.5">${statusDropdown}</td>
                         <td class="p-3.5 text-right">
                             <button onclick="openWhatsApp('11999999999', '${s.client}')" title="Cobrar / Chamar Cliente" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-xl text-xs font-semibold">
@@ -1496,7 +1702,7 @@
             const rankingData = sellers.map(seller => {
                 const sold = appData.sales
                     .filter(s => String(s.sellerId) === String(seller.id) && s.finStatus !== 'Cancelado')
-                    .reduce((acc, s) => acc + s.receivedVal, 0);
+                    .reduce((acc, s) => acc + (s.receivedVal || 0), 0);
                 const meta = parseFloat(seller.meta) || 0;
                 const pct = meta > 0 ? Math.min(100, Math.round((sold / meta) * 100)) : 0;
                 return { ...seller, sold, meta, pct };
